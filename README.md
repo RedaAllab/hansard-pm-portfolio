@@ -8,8 +8,9 @@ Portfolio-grade static visuals built on top of [`hansard-pm-nlp`](https://github
 |---|---|---|---|
 | 01 | [The style duel](portfolio/01_style_duel/README.md): a 6-trait stylometric radar showing each PM has a distinct, classifier-validated "voice" | [`STYLE_DUEL.md`](STYLE_DUEL.md) | Built |
 | 02 | [The thematic heatmap](portfolio/02_topic_heatmap/README.md): a topic-over-time heatmap tracing Brexit, Covid and Ukraine through what PMs actually talked about | [`THEMATIC_HEATMAP.md`](THEMATIC_HEATMAP.md) | Built |
+| 03 | [The handover](portfolio/03_pm_handover/README.md): style and sentiment, six weeks either side of each PM transition | [`ROADMAP_PM_HANDOVER.md`](ROADMAP_PM_HANDOVER.md) | Built |
 
-Both projects share one design system (`src/hansard_pm_portfolio/style.py`) so the two read as one coherent portfolio rather than two unrelated one-offs, see `STYLE_DUEL.md` section 7 and `THEMATIC_HEATMAP.md` section 0, which both require it explicitly.
+All three projects share one design system (`src/hansard_pm_portfolio/style.py`) so they read as one coherent portfolio rather than unrelated one-offs, see `STYLE_DUEL.md` section 7 and `THEMATIC_HEATMAP.md` section 0, which both require it explicitly.
 
 ## Architecture
 
@@ -19,6 +20,7 @@ This is a **separate, lightweight, read-only** companion to `hansard-pm-nlp`. It
 hansard-pm-portfolio/
 ├── STYLE_DUEL.md              # design spec, project 01
 ├── THEMATIC_HEATMAP.md        # design spec, project 02
+├── ROADMAP_PM_HANDOVER.md     # execution plan, project 03 (no separate design spec)
 ├── ARCHITECTURE.md            # why this repo is structured this way
 ├── assets/fonts/               # Lora, Inter, IBM Plex Mono - static instances (see ARCHITECTURE.md section 8)
 ├── src/hansard_pm_portfolio/
@@ -27,17 +29,22 @@ hansard-pm-portfolio/
 │   └── viz/
 │       ├── common.py           # shared banner/save/dark-axes helpers
 │       ├── style_duel.py       # project 01's plotting functions
-│       └── topic_heatmap.py    # project 02's plotting functions
+│       ├── topic_heatmap.py    # project 02's plotting functions
+│       └── pm_handover.py      # project 03's plotting functions
 ├── notebooks/
 │   ├── 01_style_duel.ipynb     # narrated, already executed, produces project 01's 3 images
-│   └── 02_topic_heatmap.ipynb  # narrated, already executed, produces project 02's 4 images
+│   ├── 02_topic_heatmap.ipynb  # narrated, already executed, produces project 02's 4 images
+│   └── 03_pm_handover.ipynb    # narrated, already executed, produces project 03's 3 images
 ├── portfolio/
 │   ├── 01_style_duel/
 │   │   ├── README.md           # the polished, recruiter-facing writeup
 │   │   └── assets/             # banner.png, radar_main.png, feature_importance.png, confusion_matrix.png
-│   └── 02_topic_heatmap/
+│   ├── 02_topic_heatmap/
+│   │   ├── README.md
+│   │   └── assets/             # banner.png, heatmap_main.png, small_multiples.png, covid_zoom.png
+│   └── 03_pm_handover/
 │       ├── README.md
-│       └── assets/             # banner.png, heatmap_main.png, small_multiples.png, covid_zoom.png
+│       └── assets/             # banner.png, transition_main.png, transition_timeline_secondary.png
 └── tests/
 ```
 
