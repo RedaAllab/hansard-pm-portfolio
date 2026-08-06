@@ -73,6 +73,12 @@ LEGEND_SIZE = 11
 SOURCE_SIZE = 9
 NUMBER_SIZE = 10
 
+# THEMATIC_HEATMAP.md section 6: topic-row labels and year ticks are 10pt,
+# distinct from STYLE_DUEL.md's 11pt axis labels; crisis-window labels are
+# 9pt like a source note.
+TOPIC_LABEL_SIZE = 10
+CRISIS_LABEL_SIZE = 9
+
 _fonts_registered = False
 
 

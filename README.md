@@ -7,7 +7,7 @@ Portfolio-grade static visuals built on top of [`hansard-pm-nlp`](https://github
 | # | Project | Spec | Status |
 |---|---|---|---|
 | 01 | [Le duel de style](portfolio/01_style_duel/README.md) — a 6-trait stylometric radar showing each PM has a distinct, classifier-validated "voice" | [`STYLE_DUEL.md`](STYLE_DUEL.md) | ✅ built |
-| 02 | La carte thermique des thèmes — a topic-over-time heatmap tracing Brexit → Covid → Ukraine through what PMs actually talked about | [`THEMATIC_HEATMAP.md`](THEMATIC_HEATMAP.md) | not started |
+| 02 | [La carte thermique des thèmes](portfolio/02_topic_heatmap/README.md) — a topic-over-time heatmap tracing Brexit → Covid → Ukraine through what PMs actually talked about | [`THEMATIC_HEATMAP.md`](THEMATIC_HEATMAP.md) | ✅ built |
 
 Both projects share one design system (`src/hansard_pm_portfolio/style.py`) so the two read as one coherent portfolio rather than two unrelated one-offs — see `STYLE_DUEL.md` §7 and `THEMATIC_HEATMAP.md` §0, which both require it explicitly.
 
@@ -25,13 +25,19 @@ hansard-pm-portfolio/
 │   ├── style.py                # shared colors/fonts/sizes - the one design system for every project
 │   ├── data_access.py          # reads hansard-pm-nlp's artifacts; no writes, no retraining
 │   └── viz/
-│       └── style_duel.py       # project 01's plotting functions
+│       ├── common.py           # shared banner/save/dark-axes helpers
+│       ├── style_duel.py       # project 01's plotting functions
+│       └── topic_heatmap.py    # project 02's plotting functions
 ├── notebooks/
-│   └── 01_style_duel.ipynb     # narrated, already-executed - produces project 01's 3 images
+│   ├── 01_style_duel.ipynb     # narrated, already-executed - produces project 01's 3 images
+│   └── 02_topic_heatmap.ipynb  # narrated, already-executed - produces project 02's 4 images
 ├── portfolio/
-│   └── 01_style_duel/
-│       ├── README.md           # the polished, recruiter-facing writeup
-│       └── assets/             # banner.png, radar_main.png, feature_importance.png, confusion_matrix.png
+│   ├── 01_style_duel/
+│   │   ├── README.md           # the polished, recruiter-facing writeup
+│   │   └── assets/             # banner.png, radar_main.png, feature_importance.png, confusion_matrix.png
+│   └── 02_topic_heatmap/
+│       ├── README.md
+│       └── assets/             # banner.png, heatmap_main.png, small_multiples.png, covid_zoom.png
 └── tests/
 ```
 

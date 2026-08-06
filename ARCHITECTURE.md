@@ -34,9 +34,9 @@ Les fichiers Parquet de `hansard-pm-nlp` (écrits avec `parquet-cpp-arrow` 24.x)
 
 Documenté aussi dans le README du projet (section "Comment ce visuel a été construit" et "Limites"), pas seulement ici.
 
-## 6. Un fichier de viz par projet, pas un `portfolio_viz.py` unique
+## 6. Un fichier de viz par projet, plus un `viz/common.py` partagé
 
-`STYLE_DUEL.md` §11 suggère un seul `portfolio_viz.py` pour `plot_style_radar()` et `plot_feature_importance_bar()`. Comme ce dépôt est prévu pour accueillir un deuxième projet (`THEMATIC_HEATMAP.md`, plus tard) dans le même arbre, les fonctions de tracé sont scindées par projet dès maintenant (`viz/style_duel.py`, futur `viz/topic_heatmap.py`) plutôt que d'accumuler les deux projets dans un seul fichier grandissant. `style.py` (couleurs, polices) reste, lui, unique et partagé — c'est le point que `STYLE_DUEL.md` §7 et `THEMATIC_HEATMAP.md` §0 demandent explicitement ("palette catégorielle PM partagée entre les deux projets").
+`STYLE_DUEL.md` §11 suggère un seul `portfolio_viz.py` pour `plot_style_radar()` et `plot_feature_importance_bar()`. Comme ce dépôt accueille les deux projets dans le même arbre, les fonctions de tracé sont scindées par projet (`viz/style_duel.py`, `viz/topic_heatmap.py`) plutôt que d'accumuler les deux dans un seul fichier grandissant. `style.py` (couleurs, polices) reste unique et partagé — c'est le point que `STYLE_DUEL.md` §7 et `THEMATIC_HEATMAP.md` §0 demandent explicitement ("palette catégorielle PM partagée entre les deux projets"). Une fois le projet 02 écrit, `plot_banner()` et les utilitaires d'axes sombres se sont révélés identiques d'un projet à l'autre - déplacés dans `viz/common.py` plutôt que dupliqués une deuxième fois.
 
 ## 7. Périmètre des Premiers ministres
 
@@ -50,3 +50,19 @@ Lora et Inter ne sont distribuées par Google Fonts qu'en polices variables (`Lo
 ## 9. Une inexactitude relevée dans `STYLE_DUEL.md`
 
 §12 affirme que `#9CA3AF` sur `#262730` est un contraste insuffisant et doit être réservé au fond `#0E1117`. Mesuré (`tests/test_style.py`), ce contraste est en réalité de 5,84:1 — au-dessus du seuil WCAG AA (4,5:1) que la spec applique partout ailleurs. Sans conséquence visuelle ici (aucun texte secondaire n'est posé sur `#262730` dans ce projet), mais noté plutôt que silencieusement propagé.
+
+## 10. Projet 02 : les 13 libellés de thèmes sont un travail éditorial nouveau
+
+`THEMATIC_HEATMAP.md` §6 demande des "labels courts et en langage courant... repris tels quels de l'interprétation déjà rédigée dans `phase5_lda_report.md` — ne pas réinventer les intitulés." Vérifié directement dans ce rapport et dans `app.py` (onglet Topics du dashboard live) : aucun des deux ne contient de label en langage courant, seulement des listes de mots-clés bruts (`phase5_lda_report.md`) ou des labels algorithmiques du type `"T2: hs, project, rail"` (`app.py`, 3 premiers mots-clés concaténés). `data_access.TOPIC_LABELS` (13 entrées, une par thème post-fusion) a donc été rédigé pour ce projet à partir de ces mêmes listes de mots-clés - un choix éditorial documenté comme tel dans le code et le README du projet, pas présenté comme une reprise neutre d'un texte existant.
+
+## 11. Projet 02 : la justification du zoom Covid existe réellement - dans `app.py`, pas dans un rapport
+
+À l'inverse du point précédent, la légende de l'onglet Topics du dashboard live (`app.py`) affirme déjà explicitement que les 3 thèmes Covid "track distinct sub-phases (restrictions/testing, vaccines/schools, NHS pay/inquiry) rather than one duplicated topic" - exactement le constat que `THEMATIC_HEATMAP.md` §6 demande d'illustrer pour justifier de ne pas les fusionner. Cette phrase est reprise (traduite, pas réinventée) dans `data_access.COVID_TOPIC_LABELS` et le README du projet, avec attribution à `app.py` plutôt que présentée comme une observation nouvelle de ce projet.
+
+## 12. Projet 02 : dates de mandat lues depuis `hansard-pm-nlp`, pas depuis un troisième dépôt cloné
+
+`THEMATIC_HEATMAP.md` §0 demande de charger les dates de transition de PM depuis `PHASE0_SCOPING.md` (dépôt `hansard-pm-extraction`). Plutôt que de cloner un troisième dépôt pour 4 dates, `data_access.load_pm_tenures()` les lit depuis `data/input/pm_tenures.parquet`, déjà présent dans le checkout `hansard-pm-nlp` que ce dépôt lit pour tout le reste - vérifié à la main que les deux sources concordent exactement (mêmes 4 PM, mêmes dates de début/fin).
+
+## 13. Projet 02 : Cividis en 0→max, pas en percentile
+
+Le poids d'un thème LDA n'a pas de borne supérieure naturelle interprétable - `plot_topic_heatmap()` fixe `vmax` au maximum observé dans la matrice mensuelle plutôt qu'à 1.0 (l'échelle brute du modèle, où aucune cellule n'approche jamais 1 puisque la moyenne mensuelle lisse les pics) ou à un percentile arbitraire, pour que "élevé" sur la colorbar corresponde toujours au pic réellement le plus visible sur la carte, quelle que soit la fenêtre de PM affichée.
