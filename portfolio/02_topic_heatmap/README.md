@@ -30,10 +30,10 @@ A UK Prime Minister's parliamentary attention faithfully tracks the shocks of th
 
 ## How this visual was built
 
-- **No new model trained**: the document x topic matrix comes as is from `lda_topics.parquet` (Phase 5, [`hansard-pm-nlp`](https://github.com/RedaAllab/hansard-pm-nlp)): 296 documents (PM x sitting), K=14 topics, never restricted to the classifier's 3 PMs (unlike Phase 6), so Liz Truss is included.
-- **LDA over BERTopic, by constraint, not by superiority**: [`phase5_topic_comparison_report.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/data/processed/phase5_topic_comparison_report.md) documents that BERTopic, on a corpus of only 296 documents, groups 61% of them into a single catch-all topic. LDA was chosen for this specific corpus size, not because it is intrinsically better; BERTopic is designed for corpora several orders of magnitude larger.
-- **The Ukraine/Russia merge (T0+T1) is carried over unchanged**, not redecided: [`phase5_lda_report.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/data/processed/phase5_lda_report.md) documents these two topics as near identical at every K tested, summed into one before any display.
-- **The 13 plain language labels are editorial work for this project**, not a reuse: neither the Phase 5 report nor the live dashboard offer any, both only show raw keyword lists or algorithmic labels ("T2: hs, project, rail"). The labels used here (e.g. "Brexit and the Northern Ireland deal") were written from those same keyword lists, with traceability kept in `src/hansard_pm_portfolio/data_access/_shared.py`.
+- **No new model trained**: the document x topic matrix comes as is from `lda_topics.parquet` (Phase 5, [`hansard-pm-nlp`](https://github.com/RedaAllab/hansard-pm-nlp)), 296 documents, K=14 topics, Liz Truss included (unlike Phase 6).
+- **LDA over BERTopic, by constraint, not by superiority**: BERTopic groups 61% of this small a corpus into one catch-all topic. Detail: [`phase5_topic_comparison_report.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/data/processed/phase5_topic_comparison_report.md).
+- **The Ukraine/Russia merge (T0+T1) is carried over unchanged**, not redecided: [`phase5_lda_report.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/data/processed/phase5_lda_report.md) documents the two as near-identical at every K tested.
+- **The 13 plain language labels are editorial work for this project**, not a reuse. Detail: [`ARCHITECTURE.md`](../../ARCHITECTURE.md) §10.
 - **Crisis windows and tenure dates** come from `PHASE0_SCOPING.md` ([`hansard-pm-extraction`](https://github.com/RedaAllab/hansard-pm-extraction)), never eyeballed on the chart.
 
 ## What it reveals

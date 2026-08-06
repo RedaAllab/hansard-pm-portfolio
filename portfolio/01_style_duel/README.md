@@ -30,10 +30,10 @@ Every UK Prime Minister has a recognizable speaking style, measured here across 
 
 ## How this visual was built
 
-- **No new model trained**: this visual reads artifacts already computed by [`hansard-pm-nlp`](https://github.com/RedaAllab/hansard-pm-nlp) (Phases 3, 4 and 6: `eda_summary.csv`, `affect_summary.csv`, `phase6_classifier_report.md` and its exports), without re-running any `build_*.py` script.
-- **6 traits, not 14**: the radar is limited to 6 axes to stay readable (see [`STYLE_DUEL.md`](../../STYLE_DUEL.md) section 6). 5 of them (lexical diversity, readability, hedging, certainty, words per sentence) come from the whole-corpus Phase 3/4 exports, the same ones the [live dashboard](https://hansard-pm-nlp-nhenez39aujxgtejnyjvrg.streamlit.app) uses. The 6th (frequency of "not") is recomputed with the same tokenizer as `hansard-pm-nlp` (no dependency added) because that trait only existed, in the Phase 6 exports, for 3 of the 4 Prime Ministers.
-- **`pos_INTJ` replaced with `mean_words_per_sentence`**: the original specification called for the interjection rate (`pos_INTJ`, the classifier's most discriminant trait) as the 6th axis. That trait needs POS tagging (spaCy), which Phase 6 only ran for the classifier's 3 Prime Ministers. Liz Truss (49 day tenure, 5 documents) is excluded upstream, before the stylometric traits are even computed. Rather than adding spaCy to this deliberately lightweight repo to recompute one missing value, the radar uses `mean_words_per_sentence`: available for all 4 PMs with no recomputation, and independently the 5th most discriminant trait for the more accurate model (see below).
-- **Model evidence**: the classifier (logistic regression and HistGradientBoosting, trained on a temporal split, earlier sittings for training, later ones for testing) is documented in full in [`phase6_classifier_report.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/data/processed/phase6_classifier_report.md).
+- **No new model trained**: reads artifacts `hansard-pm-nlp` already computed (Phases 3, 4, 6), no `build_*.py` script re-run.
+- **6 traits, not 14**: kept readable per [`STYLE_DUEL.md`](../../STYLE_DUEL.md) §6. "Not" frequency is recomputed (Phase 6 only covers 3 of 4 PMs for it); the other 5 are unchanged whole-corpus exports.
+- **`pos_INTJ` replaced with `mean_words_per_sentence`**: `pos_INTJ` needs spaCy, only run for 3 PMs. Detail: [`ARCHITECTURE.md`](../../ARCHITECTURE.md) §5.
+- **Model evidence**: classifier trained on a temporal split, full report in [`phase6_classifier_report.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/data/processed/phase6_classifier_report.md).
 
 ## What it reveals
 

@@ -13,21 +13,16 @@ from ._shared import (
     merge_overlapping_topics,
 )
 
-# The "tone" indicator: net_certainty again, not a 3rd distinct style metric.
-# Same reasoning as HANDOVER_METRICS (ARCHITECTURE.md section 15) plus one
-# more: net_certainty already recurs across project 01's radar and project
-# 03's handover, so reusing it a third time gives the 4-project portfolio one
-# throughline rather than a different "tone" metric per project. See
-# ANNUAL_RECAP.md section 3.
+# net_certainty again, not a 3rd style metric - this portfolio's recurring
+# tone signature (project 01's radar, project 03's handover). See
+# ARCHITECTURE.md §19 / ANNUAL_RECAP.md §3.
 RECAP_TONE_METRIC = "net_certainty"
 
 
 def yearly_pm_segments(tenures: pd.DataFrame, year: int) -> list[tuple[str, float]]:
-    """[(pm_name, share_of_the_calendar_year), ...] for `year`, clipped to
-    [Jan 1, Jan 1 of next year]. Segments do not sum to 1.0 for a PM whose
-    tenure only partly overlaps the year (2019: Johnson took office in
-    July; 2026: Starmer's tenure continues past the corpus's last sitting)
-    - a shorter bar is the honest picture, not padded to fill the card.
+    """[(pm_name, share_of_the_calendar_year), ...] for `year`. Segments
+    don't sum to 1.0 for a PM whose tenure only partly overlaps the year -
+    a shorter bar is the honest picture, not padded to fill the card.
     """
     year_start = pd.Timestamp(f"{year}-01-01")
     year_end = pd.Timestamp(f"{year + 1}-01-01")
@@ -45,12 +40,9 @@ def yearly_pm_segments(tenures: pd.DataFrame, year: int) -> list[tuple[str, floa
 def yearly_coverage_fraction(
     year: int, corpus_start: pd.Timestamp, corpus_end: pd.Timestamp
 ) -> float:
-    """Share of `year` actually covered by the corpus's sitting dates, for
-    sizing a year-card's width. 1.0 for a fully-covered year; under 1.0 for
-    2019 (corpus starts 2019-07-25) and 2026 (corpus's last sitting is
-    2026-07-15, an extraction cutoff, not the actual end of Starmer's
-    tenure - found in Phase 0, not anticipated in the roadmap's own text,
-    which only flagged 2019). See ANNUAL_RECAP.md section 1.
+    """Share of `year` covered by the corpus's sitting dates, for sizing a
+    year-card's width. Under 1.0 for 2019 and 2026, both partial - see
+    ANNUAL_RECAP.md §1.
     """
     year_start = pd.Timestamp(f"{year}-01-01")
     year_end = pd.Timestamp(f"{year + 1}-01-01")

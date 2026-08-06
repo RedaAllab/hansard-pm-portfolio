@@ -6,21 +6,8 @@ import pandas as pd
 
 from ._shared import CRISIS_WINDOWS, load_event_study_dataset, load_pm_tenures
 
-# Phase 0's own recommendation to pair MTLD with net_certainty does not
-# survive contact with the data: MTLD is a whole-corpus statistic (McCarthy &
-# Jarvis 2010's segment-based algorithm needs long stretches of text to be
-# stable - see mtld_over_time.parquet's own 1,500-word floor per bin), so a
-# single sitting is far too short a unit to compute it on without the number
-# being an artifact of sample size rather than style. Recomputing it from raw
-# text at sitting-date granularity would also be new computation this repo
-# has otherwise avoided (see ARCHITECTURE.md section 3). `vader_compound` is
-# used instead of MTLD: it is already computed per sitting date for all 4
-# in-scope PMs in `event_study_dataset.parquet` (Phase 7 built exactly this
-# table for its own PM x crisis regressions, Truss's 5 sittings included,
-# unlike Phase 6's classifier), so pairing it with `net_certainty` needs zero
-# new computation and reads two genuinely different axes ("style" and
-# "sentiment", per this project's own stated objective) rather than two
-# style metrics. Documented in ARCHITECTURE.md.
+# vader_compound replaces MTLD (Phase 0's original pairing): MTLD is
+# unstable at single-sitting length. See ARCHITECTURE.md §15.
 HANDOVER_METRICS = [
     ("net_certainty", "Net certainty"),
     ("vader_compound", "Sentiment (VADER)"),

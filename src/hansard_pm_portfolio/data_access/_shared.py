@@ -46,17 +46,11 @@ def _input_dir() -> Path:
 
 # --- Scope (STYLE_DUEL.md's radar; Phase 6's classifier) --------------------
 
-# The 4 PMs STYLE_DUEL.md's radar covers. Andy Burnham (PM from 2026-07-20,
-# per PHASE0_SCOPING.md in hansard-pm-extraction) is deliberately excluded:
-# he has zero sittings in the current corpus cutoff, and including him is
-# out of scope for this project regardless (see conversation history) - kept
-# as an explicit allowlist rather than "whichever PMs happen to be in the
-# file" so a future corpus refresh can't silently add a 5th line to the
-# radar.
+# Explicit allowlist, not "whichever PMs are in the file" - excludes Andy
+# Burnham by design. See ARCHITECTURE.md §7.
 IN_SCOPE_PMS = ["Boris Johnson", "Liz Truss", "Rishi Sunak", "Keir Starmer"]
 
-# The 3 PMs Phase 6's classifier covers (Truss excluded upstream - too few
-# documents for a train/test split; see hansard-pm-nlp/src/hansard_pm_nlp/split.py).
+# Phase 6's classifier scope - Truss excluded upstream. See ARCHITECTURE.md §7.
 CLASSIFIER_PMS = ["Boris Johnson", "Rishi Sunak", "Keir Starmer"]
 
 
@@ -86,11 +80,8 @@ def load_pm_tenures() -> pd.DataFrame:
 
 # --- Crisis windows (project 02's heatmap bands; project 03's overlap flag) --
 
-# Ported from hansard_pm_nlp.event_study.CRISIS_WINDOWS (4 date-string tuples
-# - not worth a package dependency). These also match PHASE0_SCOPING.md in
-# hansard-pm-extraction verbatim (verified by hand) - THEMATIC_HEATMAP.md
-# section 0 asks for that repo's dates specifically, and this is where
-# hansard-pm-nlp itself sources the same numbers from.
+# Ported from hansard_pm_nlp.event_study.CRISIS_WINDOWS, verified against
+# PHASE0_SCOPING.md (hansard-pm-extraction).
 CRISIS_WINDOWS = {
     "covid19": ("2020-03-23", "2021-07-19"),
     "mini_budget": ("2022-09-23", "2022-10-17"),
@@ -126,14 +117,8 @@ def load_event_study_dataset() -> pd.DataFrame:
 
 # --- LDA topic-weight layer (project 02's heatmap; project 04's dominant theme)
 
-# Hand-written from phase5_lda_report.md's keyword lists (K=14). Neither
-# phase5_lda_report.md nor app.py's own topic_labels dict contain a
-# human-language interpretation anywhere in hansard-pm-nlp - both only ever
-# show algorithmic top-3-keyword labels (e.g. "T2: hs, project, rail") - so
-# writing these is new editorial work for this project, not a rename of
-# something that already existed elsewhere. Topic numbers (see
-# phase5_lda_report.md) are noted in comments for traceability back to the
-# keyword lists these were written from.
+# Hand-written editorial labels, not a reuse of existing text - see
+# ARCHITECTURE.md §10.
 MERGED_TOPIC_LABEL = "Ukraine, Russia and international security"  # topic_0 + topic_1
 TOPIC_LABELS = {
     "topic_6": "Brexit and the Northern Ireland deal",
@@ -149,10 +134,7 @@ TOPIC_LABELS = {
     "topic_4": "Public inquiries: justice and truth",
     "topic_13": "Appointments and security vetting",
 }
-# Row order for the heatmap - grouped thematically (international security,
-# the 3 Covid sub-topics kept together, then domestic) rather than raw
-# topic-number order, per THEMATIC_HEATMAP.md section 7's explicit request
-# to avoid "an arbitrary alphabetical scatter" of related topics.
+# Grouped thematically, not raw topic-number order - THEMATIC_HEATMAP.md §7.
 TOPIC_DISPLAY_ORDER = [
     MERGED_TOPIC_LABEL,
     "Brexit and the Northern Ireland deal",

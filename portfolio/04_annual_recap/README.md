@@ -29,10 +29,10 @@ This is the portfolio's executive summary: one card per calendar year, each show
 
 ## How this visual was built
 
-- **No new model, no new aggregation risk left unchecked**: `ROADMAP_ANNUAL_RECAP.md`'s own Phase 0 flags that this project's 4 layers were built by 4 different scripts, with no documented guarantee they share a join key. Checked directly before writing any plotting code (see [`ANNUAL_RECAP.md`](../../ANNUAL_RECAP.md) section 1): `event_study_dataset.parquet` (Phase 7) and `lda_topics.parquet` (Phase 5) join on `(pm_name, sitting_date)` with 296/296 rows matching on both sides. This project is built on those two files alone, both already reused unchanged in projects 02 and 03, rather than on Phase 3/4's whole-PM aggregates.
-- **4 fixed indicators, locked before coding**: PM(s) in office (a segmented tenure band), word volume (summed), dominant theme (the year's highest-weight topic, T0+T1 merged exactly as project 02 does), and tone (mean net certainty). No 5th indicator was added once rendering started; see [`ANNUAL_RECAP.md`](../../ANNUAL_RECAP.md) section 2.
-- **Tone is net certainty again, not a new metric**: the same style signature already used in [project 01](../01_style_duel/README.md)'s radar and [project 03](../03_pm_handover/README.md)'s handover, reused a third time on purpose so the 4-project portfolio has one throughline instead of a different "tone" metric per project. See `ANNUAL_RECAP.md` section 3.
-- **A design document before the rendering code**: unlike projects 01-03, this project composes several visual elements (a header frieze plus 8 year-cards) rather than one chart type, so `ROADMAP_ANNUAL_RECAP.md`'s own Phase 3 recommendation to fix the layout in writing first was followed: see [`ANNUAL_RECAP.md`](../../ANNUAL_RECAP.md).
+- **Built on 2 files, not the roadmap's suggested 4**: `event_study_dataset.parquet` and `lda_topics.parquet` verified to join cleanly (296/296 rows). Detail: [`ANNUAL_RECAP.md`](../../ANNUAL_RECAP.md) §1, [`ARCHITECTURE.md`](../../ARCHITECTURE.md) §19.
+- **4 fixed indicators, locked before coding**: PM(s) in office, word volume, dominant theme, tone. Detail: [`ANNUAL_RECAP.md`](../../ANNUAL_RECAP.md) §2.
+- **Tone is net certainty again, not a new metric**: this portfolio's recurring throughline (projects 01 and 03 too). Detail: `ANNUAL_RECAP.md` §3.
+- **A design document before the rendering code**: this project composes a header frieze plus 8 year-cards rather than one chart type, so the layout was fixed in writing first. See [`ANNUAL_RECAP.md`](../../ANNUAL_RECAP.md).
 
 ## What it reveals
 
