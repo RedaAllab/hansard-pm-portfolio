@@ -81,16 +81,7 @@ CLASSIFIER_PMS = ["Boris Johnson", "Rishi Sunak", "Keir Starmer"]
 
 
 def read_parquet(path: Path) -> pd.DataFrame:
-    """Read a parquet file via DuckDB rather than pandas.read_parquet.
-
-    hansard-pm-nlp's parquet files are written with a newer parquet-cpp-arrow
-    (24.x) than the pyarrow this repo pins (pandas.read_parquet raises
-    "Repetition level histogram size mismatch" on them - a known
-    cross-version incompatibility in how column-chunk statistics are
-    encoded). DuckDB's own parquet reader decodes the same files without
-    issue, so it is used here instead of upgrading pyarrow, which would be
-    a heavier, less predictable fix for a one-file dependency swap.
-    """
+    """Read via DuckDB, not pandas.read_parquet - see ARCHITECTURE.md §4."""
     return duckdb.connect().execute(f"SELECT * FROM '{path}'").df()
 
 
@@ -121,24 +112,8 @@ def _function_word_rate(contributions: pd.DataFrame, word: str) -> pd.Series:
 
 def load_style_profile() -> pd.DataFrame:
     """One row per in-scope PM: the 6 STYLE_DUEL.md radar axes plus
-    n_contributions (for the Truss sample-size caveat).
-
-    5 of the 6 columns are hansard-pm-nlp's own whole-corpus Phase 3/4
-    exports (eda_summary.csv, affect_summary.csv) - the same two files
-    app.py's own "Stylometric profile by PM" radar tab merges
-    (`profile = eda.merge(affect_sum, on=["pm_name", "n_contributions"])`),
-    reused here identically for consistency with the live dashboard.
-
-    STYLE_DUEL.md's 6th axis (pos_INTJ) only has a computed value for the
-    3 classifier PMs (Phase 6 excludes Truss upstream, and POS-tagging
-    needs spaCy, which this lightweight repo deliberately doesn't depend
-    on - see ARCHITECTURE.md). `mean_words_per_sentence` is used instead:
-    it is app.py's own 5th radar axis already, available for all 4 PMs
-    with no recomputation, and it is independently the #5 permutation-
-    importance feature for the better-performing Phase 6 model (see
-    load_feature_importance("hgb")) - so the substitution keeps the
-    "classifier-validated trait" framing honest rather than silently
-    dropping it.
+    n_contributions. pos_INTJ is substituted with mean_words_per_sentence -
+    see ARCHITECTURE.md §5.
     """
     eda = pd.read_csv(_processed_dir() / "eda_summary.csv")
     affect = pd.read_csv(_processed_dir() / "affect_summary.csv")
@@ -316,15 +291,8 @@ def load_topic_weights() -> pd.DataFrame:
 
 
 def merge_overlapping_topics(topic_weights: pd.DataFrame) -> pd.DataFrame:
-    """Sum topic_0 and topic_1 (documented as one near-duplicate Ukraine/
-    Russia/security pair, see MERGED_TOPIC_LABEL) into a single column,
-    rename the remaining 12 via TOPIC_LABELS.
-
-    Ported from hansard_pm_nlp.dashboard_helpers.merge_overlapping_topics
-    (see module docstring). The signature drops that function's
-    `topic_labels`/`merged_label` parameters since this repo only ever
-    merges the one documented pair - they're this module's own constants,
-    not passed in per call.
+    """Sum topic_0 + topic_1 into MERGED_TOPIC_LABEL, rename the rest via
+    TOPIC_LABELS. Ported from hansard_pm_nlp.dashboard_helpers.
     """
     merged = topic_weights.copy()
     merged[MERGED_TOPIC_LABEL] = merged["topic_0"] + merged["topic_1"]
@@ -417,23 +385,10 @@ def build_transition_windows(
     weeks: int = TRANSITION_WINDOW_WEEKS,
 ) -> pd.DataFrame:
     """One row per sitting within `weeks` of any transition, labeled
-    side="before"/"after" and with `days_from_transition` (negative before,
-    zero or positive after) so the 3 transitions plot on a shared x-axis
-    regardless of their real calendar dates.
-
-    The window is a fixed +/-`weeks` on both sides (ROADMAP_PM_HANDOVER.md
-    section 2's own decision) - it is not stretched to backfill a thin side.
-    In practice two distinct causes leave a side sparse or empty, both kept
-    visible rather than smoothed over:
-      - Liz Truss's 49-day tenure is shorter than 2x the window, so it
-        cannot fill either side symmetrically (anticipated in the roadmap).
-      - Summer recess (before Johnson -> Truss) and the Parliament
-        dissolution ahead of the 2024 general election (before Sunak ->
-        Starmer) leave the "before" side with zero sittings in the strict
-        6-week window for both of those transitions - a real gap in when
-        Parliament sat, not a data-coverage problem, and not anticipated in
-        the roadmap's own text (which only flagged the Truss-tenure case).
-        See ARCHITECTURE.md.
+    side="before"/"after", with `days_from_transition` for a shared x-axis
+    across the 3 transitions. Fixed window, never stretched to fill a thin
+    side - two of the six sides are sparse or empty for reasons beyond
+    Truss's short tenure; see ARCHITECTURE.md §17.
     """
     events = events if events is not None else load_event_study_dataset()
     transitions = transitions if transitions is not None else load_pm_transitions()

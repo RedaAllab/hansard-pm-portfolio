@@ -30,11 +30,11 @@ This project isolates the moment of a PM handover from everything else going on 
 
 ## How this visual was built
 
-- **No new model, no new regression**: every value plotted comes from `event_study_dataset.parquet` (Phase 7, [`hansard-pm-nlp`](https://github.com/RedaAllab/hansard-pm-nlp)), 296 sittings across all 4 in-scope PMs, already built there for its own PM x crisis regressions. This project only re-slices that same table around 3 dates.
-- **The 3 transitions are derived, not hardcoded**: `data_access.load_pm_transitions()` reads them off `load_pm_tenures()`, so a scope change (adding or removing a PM) propagates automatically instead of leaving a stale row.
-- **Net certainty + VADER sentiment, not MTLD**: `ROADMAP_PM_HANDOVER.md`'s own draft suggested MTLD as one of the two "star" metrics. MTLD is a whole-corpus statistic; the segment-based algorithm needs long, continuous text to be stable, and a single sitting is far too short a unit (see `mtld_over_time.parquet`'s own 1,500-word floor per monthly bin, in `hansard-pm-nlp`). Computing it at sitting-date granularity would mean new computation this repo otherwise avoids. `vader_compound` is used instead: already computed per sitting date for all 4 PMs (Truss included), so the substitution costs zero new computation and reads two genuinely different axes, style and sentiment, matching this project's own stated goal, rather than two style metrics. See `ARCHITECTURE.md`.
-- **A fixed +/- 6 week window, not stretched to fill a thin side**: `ROADMAP_PM_HANDOVER.md` section 3 is explicit that the axis should never be artificially stretched to hide a small sample. The window stays fixed; where a side is empty, the chart says so in words instead of showing a misleadingly smooth gap.
-- **Colors encode before/after, not the value's sign**: grey-blue before, cyan after, deliberately not this project's positive/negative color pair, which is reserved for value judgments this descriptive project does not make.
+- **No new model, no new regression**: every value comes from `event_study_dataset.parquet` (Phase 7, [`hansard-pm-nlp`](https://github.com/RedaAllab/hansard-pm-nlp)), 296 sittings across all 4 PMs. This project only re-slices that table around 3 dates.
+- **The 3 transitions are derived, not hardcoded**: `load_pm_transitions()` reads them off `load_pm_tenures()`, so a scope change propagates automatically.
+- **Net certainty + VADER sentiment, not MTLD**: MTLD needs long continuous text, unstable at single-sitting granularity. VADER is already computed per sitting for all 4 PMs. Detail: `ARCHITECTURE.md` §15.
+- **A fixed +/- 6 week window, never stretched to fill a thin side**: where a side is empty, the chart says so in words instead of showing a misleadingly smooth gap.
+- **Colors encode before/after, not the value's sign**: grey-blue before, cyan after, not this project's positive/negative pair, reserved for value judgments this descriptive project doesn't make.
 
 ## What it reveals
 

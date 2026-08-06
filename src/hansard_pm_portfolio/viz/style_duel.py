@@ -11,7 +11,7 @@ from matplotlib.figure import Figure
 
 from hansard_pm_portfolio import style
 from hansard_pm_portfolio.data_access import IN_SCOPE_PMS, RADAR_AXES, normalize_radar
-from hansard_pm_portfolio.viz.common import FIGURE_KW, dark_axes, plot_banner, save
+from hansard_pm_portfolio.viz.common import FIGURE_KW, dark_axes, hide_spines, plot_banner, save
 
 __all__ = [
     "plot_banner",
@@ -73,11 +73,11 @@ def plot_style_radar(
         ax.fill(angles, values, color=color, alpha=0.15)
 
     fig.text(
-        0.5, 0.94, "THE STYLE DUEL", ha="center", fontsize=style.TITLE_SIZE,
+        style.TITLE_X, 0.94, "THE STYLE DUEL", ha=style.TITLE_HA, fontsize=style.TITLE_SIZE,
         fontweight="bold", color=style.TEXT_PRIMARY, fontfamily=style.TITLE_FONT,
     )
     fig.text(
-        0.5, 0.90, "What 6 stylometric traits reveal", ha="center",
+        style.TITLE_X, 0.90, "What 6 stylometric traits reveal", ha=style.TITLE_HA,
         fontsize=style.SUBTITLE_SIZE, color=style.TEXT_SECONDARY, fontfamily=style.SUBTITLE_FONT,
     )
 
@@ -178,8 +178,7 @@ def plot_confusion_matrix(matrix: pd.DataFrame, accuracy: float) -> Figure:
                   fontfamily=style.BODY_FONT, labelpad=10)
     ax.set_ylabel("Actual", fontsize=style.AXIS_LABEL_SIZE, color=style.TEXT_SECONDARY,
                   fontfamily=style.BODY_FONT)
-    for spine in ax.spines.values():
-        spine.set_visible(False)
+    hide_spines(ax)
 
     for i in range(n):
         for j in range(n):

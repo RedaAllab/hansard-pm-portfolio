@@ -79,6 +79,23 @@ NUMBER_SIZE = 10
 TOPIC_LABEL_SIZE = 10
 CRISIS_LABEL_SIZE = 9
 
+# Projects 03-04's smaller compositions (panels, year-cards) - named rather
+# than left as inline numbers, same rule as above.
+SECONDARY_TITLE_SIZE = 14
+PANEL_TITLE_SIZE = 11
+AXIS_SIDE_LABEL_SIZE = 9
+CARD_YEAR_SIZE = 13
+CARD_BODY_SIZE = 7.5
+CARD_CAPTION_SIZE = 6.5
+CARD_NUMBER_SIZE = 12
+
+# --- Layout ------------------------------------------------------------------
+# Every flagship visual's title/subtitle sits at the same x, left-aligned -
+# the house convention already used by most secondary visuals, now applied
+# to the 4 main ones too so they read as one system when viewed in sequence.
+TITLE_X = 0.06
+TITLE_HA = "left"
+
 _fonts_registered = False
 
 

@@ -11,7 +11,7 @@ from matplotlib.figure import Figure
 
 from hansard_pm_portfolio import data_access as da
 from hansard_pm_portfolio import style
-from hansard_pm_portfolio.viz.common import FIGURE_KW
+from hansard_pm_portfolio.viz.common import FIGURE_KW, hide_spines
 
 
 def _month_edges(monthly: pd.DataFrame) -> tuple[float, float]:
@@ -110,8 +110,7 @@ def plot_topic_heatmap(monthly: pd.DataFrame, tenures: pd.DataFrame) -> Figure:
     ax.tick_params(axis="x", colors=style.TEXT_SECONDARY, labelsize=style.TOPIC_LABEL_SIZE, pad=6)
     ax.set_xlim(x_start, x_end)
 
-    for spine in ax.spines.values():
-        spine.set_visible(False)
+    hide_spines(ax)
 
     chart_end = monthly.index[-1] + pd.DateOffset(months=1)
     _draw_crisis_windows(ax, y_top=0, x_start=x_start, x_end=x_end)
@@ -119,11 +118,11 @@ def plot_topic_heatmap(monthly: pd.DataFrame, tenures: pd.DataFrame) -> Figure:
     # them, which otherwise reads as one crowded line of text.
     _draw_pm_transitions(ax, tenures, chart_end, y_bottom=n_topics + 1.9)
 
-    fig.text(0.5, 0.95, "THE THEMATIC HEATMAP", ha="center",
+    fig.text(style.TITLE_X, 0.95, "THE THEMATIC HEATMAP", ha=style.TITLE_HA,
               fontsize=style.TITLE_SIZE, fontweight="bold", color=style.TEXT_PRIMARY,
               fontfamily=style.TITLE_FONT)
-    fig.text(0.5, 0.91, "7 years of British politics, month by month", ha="center",
-              fontsize=style.SUBTITLE_SIZE, color=style.TEXT_SECONDARY,
+    fig.text(style.TITLE_X, 0.91, "7 years of British politics, month by month",
+              ha=style.TITLE_HA, fontsize=style.SUBTITLE_SIZE, color=style.TEXT_SECONDARY,
               fontfamily=style.SUBTITLE_FONT)
 
     fig.subplots_adjust(top=0.84, bottom=0.26, left=0.30, right=0.95)
@@ -173,8 +172,7 @@ def plot_topic_small_multiples(monthly: pd.DataFrame, tenures: pd.DataFrame) -> 
                      pad=3)
         ax.set_ylim(0, y_max)
         ax.set_xlim(x_start, x_end)
-        for spine in ax.spines.values():
-            spine.set_visible(False)
+        hide_spines(ax)
         ax.set_yticks([])
         ax.xaxis.set_major_locator(mdates.YearLocator(2))
         ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
@@ -188,8 +186,9 @@ def plot_topic_small_multiples(monthly: pd.DataFrame, tenures: pd.DataFrame) -> 
     for ax in axes_flat[len(topics):]:
         ax.set_visible(False)
 
-    fig.suptitle("Each theme, month by month", x=0.06, ha="left", fontsize=14,
-                 color=style.TEXT_PRIMARY, fontfamily=style.TITLE_FONT, fontweight="bold")
+    fig.suptitle("Each theme, month by month", x=style.TITLE_X, ha=style.TITLE_HA,
+                 fontsize=style.SECONDARY_TITLE_SIZE, color=style.TEXT_PRIMARY,
+                 fontfamily=style.TITLE_FONT, fontweight="bold")
     fig.text(0.06, 0.925, "The 13 themes separately, one panel per theme rather than a "
              "13 color legend", fontsize=9, color=style.TEXT_SECONDARY,
              fontfamily=style.SUBTITLE_FONT)
@@ -227,15 +226,15 @@ def plot_covid_zoom(monthly: pd.DataFrame) -> Figure:
         ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
         ax.tick_params(axis="x", colors=style.TEXT_SECONDARY, labelsize=8)
         ax.tick_params(axis="y", length=0)
-        for spine in ax.spines.values():
-            spine.set_visible(False)
+        hide_spines(ax)
 
     axes[0].set_yticks([0, y_max])
     axes[0].set_yticklabels(["low", "high"], fontsize=style.CRISIS_LABEL_SIZE,
                             color=style.TEXT_SECONDARY, fontfamily=style.BODY_FONT)
 
-    fig.suptitle("Covid-19: three themes, not one", x=0.06, ha="left", fontsize=14,
-                 color=style.TEXT_PRIMARY, fontfamily=style.TITLE_FONT, fontweight="bold")
+    fig.suptitle("Covid-19: three themes, not one", x=style.TITLE_X, ha=style.TITLE_HA,
+                 fontsize=style.SECONDARY_TITLE_SIZE, color=style.TEXT_PRIMARY,
+                 fontfamily=style.TITLE_FONT, fontweight="bold")
     fig.text(0.06, 0.90, "Unlike Ukraine/Russia, never merged: three distinct "
              "sub-phases of the same crisis.",
              fontsize=9, color=style.TEXT_SECONDARY, fontfamily=style.SUBTITLE_FONT)

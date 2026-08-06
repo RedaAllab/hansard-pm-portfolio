@@ -12,18 +12,13 @@ from matplotlib.ticker import MaxNLocator
 
 from hansard_pm_portfolio import data_access as da
 from hansard_pm_portfolio import style
-from hansard_pm_portfolio.viz.common import FIGURE_KW
+from hansard_pm_portfolio.viz.common import FIGURE_KW, hide_spines
 
 _SIDE_COLOR = {"before": style.SECONDARY, "after": style.ACCENT}
 
 
 def _plot_side(ax, side_df: pd.DataFrame, y: str, side: str, linestyle: str, marker: str) -> None:
-    """One before/after segment of one metric on one panel. Segments are
-    drawn separately, never connected across the transition gap - the gap
-    itself (present on both sides for 2 of the 3 transitions, see
-    data_access.build_transition_windows' docstring) is part of the story,
-    not something to bridge with an interpolated line.
-    """
+    """One before/after segment. Never interpolate across the gap: the gap is the finding."""
     if side_df.empty:
         return
     side_df = side_df.sort_values("days_from_transition")
@@ -34,11 +29,8 @@ def _plot_side(ax, side_df: pd.DataFrame, y: str, side: str, linestyle: str, mar
 
 
 def _mark_crisis_overlap(ax, side_df: pd.DataFrame, y: str, crisis_key: str) -> None:
-    """A white-edged ring around any point that falls inside CRISIS_WINDOWS
-    (ROADMAP_PM_HANDOVER.md section 2: the Truss -> Sunak "before" side
-    overlaps the mini-budget window on its own single sitting, and PM
-    effect and crisis effect are not separable there - flagged on the point
-    itself, not only in the caption).
+    """Ring any point that falls inside CRISIS_WINDOWS - PM effect and crisis
+    effect aren't separable there. See ARCHITECTURE.md §16.
     """
     flagged = side_df[side_df["sitting_date"].apply(lambda d: da.in_crisis_window(d, crisis_key))]
     if flagged.empty:
@@ -96,8 +88,9 @@ def plot_transition_panels(windows: pd.DataFrame, transitions: pd.DataFrame) -> 
         ax.axvline(0, color=style.GRID, linestyle=":", linewidth=1, zorder=1)
         ax.set_xlim(-weeks * 7, weeks * 7)
         ax.set_title(
-            f"{t['before_pm'].split()[-1]} → {t['after_pm'].split()[-1]}", fontsize=11,
-            color=style.TEXT_PRIMARY, fontfamily=style.SUBTITLE_FONT, fontweight="bold", pad=10,
+            f"{t['before_pm'].split()[-1]} → {t['after_pm'].split()[-1]}",
+            fontsize=style.PANEL_TITLE_SIZE, color=style.TEXT_PRIMARY,
+            fontfamily=style.SUBTITLE_FONT, fontweight="bold", pad=10,
         )
         ax.set_xticks([-weeks * 7, 0, weeks * 7])
         ax.set_xticklabels([f"-{weeks}w", "handover", f"+{weeks}w"])
@@ -106,24 +99,24 @@ def plot_transition_panels(windows: pd.DataFrame, transitions: pd.DataFrame) -> 
         ax.tick_params(axis="x", colors=style.TEXT_SECONDARY, labelsize=8, length=0)
         ax.tick_params(axis="y", colors=style.SECONDARY, labelsize=7, length=0)
         ax2.tick_params(axis="y", colors=style.ACCENT, labelsize=7, length=0)
-        for spine in ax.spines.values():
-            spine.set_visible(False)
-        for spine in ax2.spines.values():
-            spine.set_visible(False)
+        hide_spines(ax, ax2)
 
-    axes[0].set_ylabel(label_a, fontsize=9, color=style.SECONDARY, fontfamily=style.BODY_FONT)
+    axes[0].set_ylabel(label_a, fontsize=style.AXIS_SIDE_LABEL_SIZE, color=style.SECONDARY,
+                        fontfamily=style.BODY_FONT)
     fig.text(
-        0.995, 0.62, label_b, rotation=90, va="center", ha="right", fontsize=9,
-        color=style.ACCENT, fontfamily=style.BODY_FONT,
+        0.995, 0.62, label_b, rotation=90, va="center", ha="right",
+        fontsize=style.AXIS_SIDE_LABEL_SIZE, color=style.ACCENT, fontfamily=style.BODY_FONT,
     )
 
     fig.suptitle(
-        "THE HANDOVER", x=0.06, ha="left", fontsize=style.TITLE_SIZE, fontweight="bold",
-        color=style.TEXT_PRIMARY, fontfamily=style.TITLE_FONT,
+        "THE HANDOVER", x=style.TITLE_X, ha=style.TITLE_HA, fontsize=style.TITLE_SIZE,
+        fontweight="bold", color=style.TEXT_PRIMARY, fontfamily=style.TITLE_FONT,
     )
     fig.text(
-        0.06, 0.905, "Style and sentiment, six weeks either side of each new Prime Minister",
-        fontsize=style.SUBTITLE_SIZE, color=style.TEXT_SECONDARY, fontfamily=style.SUBTITLE_FONT,
+        style.TITLE_X, 0.905,
+        "Style and sentiment, six weeks either side of each new Prime Minister",
+        ha=style.TITLE_HA, fontsize=style.SUBTITLE_SIZE, color=style.TEXT_SECONDARY,
+        fontfamily=style.SUBTITLE_FONT,
     )
     fig.text(
         0.06, 0.045,
@@ -170,20 +163,20 @@ def plot_transition_timeline(monthly: pd.DataFrame, tenures: pd.DataFrame) -> Fi
         ax.text(mid, 1.0, label, transform=ax.get_xaxis_transform(), ha="center", va="bottom",
                 fontsize=9, color=style.TEXT_SECONDARY, fontfamily=style.BODY_FONT, clip_on=False)
 
-    ax.set_ylabel(label_a, fontsize=9, color=style.SECONDARY, fontfamily=style.BODY_FONT)
-    ax2.set_ylabel(label_b, fontsize=9, color=style.ACCENT, fontfamily=style.BODY_FONT)
+    ax.set_ylabel(label_a, fontsize=style.AXIS_SIDE_LABEL_SIZE, color=style.SECONDARY,
+                  fontfamily=style.BODY_FONT)
+    ax2.set_ylabel(label_b, fontsize=style.AXIS_SIDE_LABEL_SIZE, color=style.ACCENT,
+                   fontfamily=style.BODY_FONT)
     ax.tick_params(axis="y", colors=style.SECONDARY, labelsize=8, length=0)
     ax2.tick_params(axis="y", colors=style.ACCENT, labelsize=8, length=0)
     ax.xaxis.set_major_locator(mdates.YearLocator())
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
     ax.tick_params(axis="x", colors=style.TEXT_SECONDARY, labelsize=9, pad=6)
-    for spine in ax.spines.values():
-        spine.set_visible(False)
-    for spine in ax2.spines.values():
-        spine.set_visible(False)
+    hide_spines(ax, ax2)
 
-    fig.suptitle("The same story, without the zoom", x=0.06, ha="left", fontsize=14,
-                 color=style.TEXT_PRIMARY, fontfamily=style.TITLE_FONT, fontweight="bold")
+    fig.suptitle("The same story, without the zoom", x=style.TITLE_X, ha=style.TITLE_HA,
+                 fontsize=style.SECONDARY_TITLE_SIZE, color=style.TEXT_PRIMARY,
+                 fontfamily=style.TITLE_FONT, fontweight="bold")
     fig.text(0.06, 0.895, "Net certainty and sentiment, monthly average, all 4 PMs, "
              "dotted lines mark each handover", fontsize=9, color=style.TEXT_SECONDARY,
              fontfamily=style.SUBTITLE_FONT)

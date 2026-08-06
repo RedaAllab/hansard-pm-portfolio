@@ -1,5 +1,8 @@
 # hansard-pm-portfolio
 
+[![CI](https://github.com/RedaAllab/hansard-pm-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/RedaAllab/hansard-pm-portfolio/actions/workflows/ci.yml)
+[![license](https://img.shields.io/badge/license-MIT-7C89A6)](LICENSE)
+
 Portfolio-grade static visuals built on top of [`hansard-pm-nlp`](https://github.com/RedaAllab/hansard-pm-nlp)'s already-computed artifacts (Hansard speeches by UK Prime Ministers, 2019-present), for a non-technical audience (recruiter, LinkedIn), not for further analysis. No new model is trained here; every number and chart traces back to a report already committed in `hansard-pm-nlp`.
 
 ## Projects

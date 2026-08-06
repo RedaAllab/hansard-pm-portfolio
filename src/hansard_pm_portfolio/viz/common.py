@@ -12,13 +12,19 @@ from hansard_pm_portfolio import style
 FIGURE_KW = {"facecolor": style.BACKGROUND}
 
 
+def hide_spines(*axes) -> None:
+    """Hide all 4 spines on each given axes."""
+    for ax in axes:
+        for spine in ax.spines.values():
+            spine.set_visible(False)
+
+
 def dark_axes(ax) -> None:
     """Standard dark-theme axes styling: background, no spines, secondary-
     colored ticks. Most plots then override specific spines/ticks further.
     """
     ax.set_facecolor(style.BACKGROUND)
-    for spine in ax.spines.values():
-        spine.set_visible(False)
+    hide_spines(ax)
     ax.tick_params(colors=style.TEXT_SECONDARY)
 
 

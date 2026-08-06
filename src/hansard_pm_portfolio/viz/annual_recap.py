@@ -12,7 +12,7 @@ from matplotlib.figure import Figure
 from matplotlib.patches import Rectangle
 
 from hansard_pm_portfolio import style
-from hansard_pm_portfolio.viz.common import FIGURE_KW
+from hansard_pm_portfolio.viz.common import FIGURE_KW, hide_spines
 
 _CARD_WIDTH_FLOOR = 0.5
 
@@ -79,29 +79,29 @@ def _draw_header(ax, tenures: pd.DataFrame, year_bounds: tuple[pd.Timestamp, pd.
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
     ax.tick_params(axis="x", colors=style.TEXT_SECONDARY, labelsize=8, length=0, pad=4)
     ax.set_yticks([])
-    for spine in ax.spines.values():
-        spine.set_visible(False)
+    hide_spines(ax)
 
 
 def _draw_year_card(ax, row, tone_range: tuple[float, float], max_word_count: int) -> None:
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.set_facecolor("none")
-    for spine in ax.spines.values():
-        spine.set_visible(False)
+    hide_spines(ax)
     ax.set_xticks([])
     ax.set_yticks([])
 
-    ax.text(0.5, 1.05, str(row.year), ha="center", va="bottom", fontsize=13, fontweight="bold",
-            color=style.TEXT_PRIMARY, fontfamily=style.SUBTITLE_FONT, transform=ax.transAxes)
+    ax.text(0.5, 1.05, str(row.year), ha="center", va="bottom", fontsize=style.CARD_YEAR_SIZE,
+            fontweight="bold", color=style.TEXT_PRIMARY, fontfamily=style.SUBTITLE_FONT,
+            transform=ax.transAxes)
     if row.is_partial_year:
-        ax.text(0.5, 0.955, "partial year", ha="center", va="bottom", fontsize=6.5,
-                color=style.TEXT_SECONDARY, fontfamily=style.BODY_FONT, style="italic")
+        ax.text(0.5, 0.955, "partial year", ha="center", va="bottom",
+                fontsize=style.CARD_CAPTION_SIZE, color=style.TEXT_SECONDARY,
+                fontfamily=style.BODY_FONT, style="italic")
 
     _draw_pm_band(ax, row.pm_segments, y0=0.80, height=0.10)
 
     theme_lines = textwrap.wrap(row.dominant_theme, width=16)[:3]
-    ax.text(0.5, 0.62, "\n".join(theme_lines), ha="center", va="top", fontsize=7.5,
+    ax.text(0.5, 0.62, "\n".join(theme_lines), ha="center", va="top", fontsize=style.CARD_BODY_SIZE,
             color=style.TEXT_PRIMARY, fontfamily=style.BODY_FONT, linespacing=1.35)
 
     bar_y, bar_h = 0.40, 0.05
@@ -110,10 +110,11 @@ def _draw_year_card(ax, row, tone_range: tuple[float, float], max_word_count: in
     bar_width = 0.8 * (row.word_count / max_word_count)
     ax.add_patch(Rectangle((0.1, bar_y), bar_width, bar_h, facecolor=style.SECONDARY, zorder=2))
 
-    ax.text(0.5, 0.28, f"{row.word_count / 1000:.0f}k", ha="center", va="bottom", fontsize=12,
-            fontweight="bold", color=style.SECONDARY, fontfamily=style.NUMBER_FONT)
-    ax.text(0.5, 0.235, "words", ha="center", va="top", fontsize=6.5, color=style.TEXT_SECONDARY,
-            fontfamily=style.BODY_FONT)
+    ax.text(0.5, 0.28, f"{row.word_count / 1000:.0f}k", ha="center", va="bottom",
+            fontsize=style.CARD_NUMBER_SIZE, fontweight="bold", color=style.SECONDARY,
+            fontfamily=style.NUMBER_FONT)
+    ax.text(0.5, 0.235, "words", ha="center", va="top", fontsize=style.CARD_CAPTION_SIZE,
+            color=style.TEXT_SECONDARY, fontfamily=style.BODY_FONT)
 
     tone_min, tone_max = tone_range
     span = tone_max - tone_min or 1.0
@@ -148,12 +149,12 @@ def plot_annual_recap(recap: pd.DataFrame, tenures: pd.DataFrame) -> Figure:
         ax.set_facecolor(style.BACKGROUND)
         _draw_year_card(ax, row, tone_range, max_word_count)
 
-    fig.text(0.03, 0.94, "THE RECAP", fontsize=style.TITLE_SIZE, fontweight="bold",
-              color=style.TEXT_PRIMARY, fontfamily=style.TITLE_FONT)
-    fig.text(0.03, 0.895, "7 years of British politics, one card per year",
-              fontsize=style.SUBTITLE_SIZE, color=style.TEXT_SECONDARY,
+    fig.text(style.TITLE_X, 0.94, "THE RECAP", ha=style.TITLE_HA, fontsize=style.TITLE_SIZE,
+              fontweight="bold", color=style.TEXT_PRIMARY, fontfamily=style.TITLE_FONT)
+    fig.text(style.TITLE_X, 0.895, "7 years of British politics, one card per year",
+              ha=style.TITLE_HA, fontsize=style.SUBTITLE_SIZE, color=style.TEXT_SECONDARY,
               fontfamily=style.SUBTITLE_FONT)
-    fig.text(0.03, 0.035,
+    fig.text(style.TITLE_X, 0.035,
              "● tone marker = mean net certainty for the year, scaled across all 8 years",
              fontsize=7, color=style.TEXT_SECONDARY, fontfamily=style.BODY_FONT)
     fig.text(0.97, 0.035, "Source: Hansard API · hansard-pm-nlp", ha="right",
