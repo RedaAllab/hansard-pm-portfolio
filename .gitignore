@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+.ipynb_checkpoints/
+.venv/
+.env
+.DS_Store
+
+# Notebook outputs are committed deliberately (README section "Reproduire ce
+# visuel" ships a narrated, already-executed notebook) - do NOT ignore *.ipynb.

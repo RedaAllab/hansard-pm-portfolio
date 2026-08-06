@@ -1,0 +1,36 @@
+[project]
+name = "hansard-pm-portfolio"
+version = "0.1.0"
+description = "Portfolio-grade static visuals built on top of hansard-pm-nlp's precomputed artifacts, for a non-technical (recruiter/LinkedIn) audience."
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "pandas>=2.2",
+    "pyarrow>=16.0",
+    "duckdb>=1.0",
+    "matplotlib>=3.9",
+    "numpy>=1.26",
+    "fonttools>=4.50",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.16",
+    "jupyter>=1.0",
+    "nbconvert>=7.16",
+    "pillow>=10.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
