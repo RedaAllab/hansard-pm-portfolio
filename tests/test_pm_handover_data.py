@@ -40,7 +40,10 @@ class TestLoadPmTransitions:
         )
 
     def test_one_row_fewer_than_tenures(self, monkeypatch):
-        monkeypatch.setattr(da, "load_pm_tenures", self._tenures)
+        # load_pm_transitions() resolves load_pm_tenures via pm_handover's
+        # own module namespace (imported from _shared at module load time),
+        # not via the data_access package's re-exported name - patch there.
+        monkeypatch.setattr(da.pm_handover, "load_pm_tenures", self._tenures)
         transitions = da.load_pm_transitions()
         assert len(transitions) == 2
         assert transitions.iloc[0].to_dict() == {

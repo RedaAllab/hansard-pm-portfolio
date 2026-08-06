@@ -2,6 +2,7 @@ import pandas as pd
 import pytest
 
 from hansard_pm_portfolio import data_access as da
+from hansard_pm_portfolio.data_access.style_duel import _function_word_rate
 
 
 def test_in_scope_pms_excludes_burnham():
@@ -55,7 +56,7 @@ class TestFunctionWordRate:
                 "contribution_text": ["I will not do that", "Cannot is not not", "Notable point"],
             }
         )
-        rates = da._function_word_rate(contributions, "not")
+        rates = _function_word_rate(contributions, "not")
         # A: tokens = [i, will, not, do, that, cannot, is, not, not] -> 3/9
         assert rates["A"] == pytest.approx(3 / 9)
         # B: "Notable" tokenizes to "notable", not "not" - must not
@@ -64,7 +65,7 @@ class TestFunctionWordRate:
 
     def test_empty_text_gives_nan(self):
         contributions = pd.DataFrame({"pm_name": ["A"], "contribution_text": [""]})
-        rates = da._function_word_rate(contributions, "not")
+        rates = _function_word_rate(contributions, "not")
         assert pd.isna(rates["A"])
 
 

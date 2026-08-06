@@ -31,7 +31,12 @@ hansard-pm-portfolio/
 ├── assets/fonts/               # Lora, Inter, IBM Plex Mono - static instances (see ARCHITECTURE.md section 8)
 ├── src/hansard_pm_portfolio/
 │   ├── style.py                # shared colors/fonts/sizes, the one design system for every project
-│   ├── data_access.py          # reads hansard-pm-nlp's artifacts; no writes, no retraining
+│   ├── data_access/            # reads hansard-pm-nlp's artifacts; no writes, no retraining
+│   │   ├── _shared.py          # I/O, PM scope, tenures, crisis windows, the LDA topic layer
+│   │   ├── style_duel.py       # project 01's data loading
+│   │   ├── topic_heatmap.py    # project 02's data loading
+│   │   ├── pm_handover.py      # project 03's data loading
+│   │   └── annual_recap.py     # project 04's data loading
 │   └── viz/
 │       ├── common.py           # shared banner/save/dark-axes helpers
 │       ├── style_duel.py       # project 01's plotting functions
