@@ -76,3 +76,4 @@ Prerequisite: `hansard-pm-nlp` cloned as a sibling directory (`../hansard-pm-nlp
 - [`phase7_event_study_report.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/data/processed/phase7_event_study_report.md): the formal event-study regressions this project deliberately does not repeat, and whose null result motivates the caution above
 - [`ROADMAP_PM_HANDOVER.md`](../../ROADMAP_PM_HANDOVER.md): execution plan for this project
 - [`WRITEUP.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/WRITEUP.md): full write-up of the analysis project
+- [Project 04, the recap](../04_annual_recap/README.md): the 2022 and 2024 transitions examined here, shown again as one compressed card per year, alongside the other 3 projects

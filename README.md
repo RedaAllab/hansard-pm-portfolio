@@ -9,8 +9,9 @@ Portfolio-grade static visuals built on top of [`hansard-pm-nlp`](https://github
 | 01 | [The style duel](portfolio/01_style_duel/README.md): a 6-trait stylometric radar showing each PM has a distinct, classifier-validated "voice" | [`STYLE_DUEL.md`](STYLE_DUEL.md) | Built |
 | 02 | [The thematic heatmap](portfolio/02_topic_heatmap/README.md): a topic-over-time heatmap tracing Brexit, Covid and Ukraine through what PMs actually talked about | [`THEMATIC_HEATMAP.md`](THEMATIC_HEATMAP.md) | Built |
 | 03 | [The handover](portfolio/03_pm_handover/README.md): style and sentiment, six weeks either side of each PM transition | [`ROADMAP_PM_HANDOVER.md`](ROADMAP_PM_HANDOVER.md) | Built |
+| 04 | [The recap](portfolio/04_annual_recap/README.md): one card per calendar year, the portfolio's executive summary | [`ROADMAP_ANNUAL_RECAP.md`](ROADMAP_ANNUAL_RECAP.md) + [`ANNUAL_RECAP.md`](ANNUAL_RECAP.md) | Built |
 
-All three projects share one design system (`src/hansard_pm_portfolio/style.py`) so they read as one coherent portfolio rather than unrelated one-offs, see `STYLE_DUEL.md` section 7 and `THEMATIC_HEATMAP.md` section 0, which both require it explicitly.
+All four projects share one design system (`src/hansard_pm_portfolio/style.py`) so they read as one coherent portfolio rather than unrelated one-offs, see `STYLE_DUEL.md` section 7 and `THEMATIC_HEATMAP.md` section 0, which both require it explicitly.
 
 ## Architecture
 
@@ -21,6 +22,8 @@ hansard-pm-portfolio/
 ├── STYLE_DUEL.md              # design spec, project 01
 ├── THEMATIC_HEATMAP.md        # design spec, project 02
 ├── ROADMAP_PM_HANDOVER.md     # execution plan, project 03 (no separate design spec)
+├── ROADMAP_ANNUAL_RECAP.md    # execution plan, project 04
+├── ANNUAL_RECAP.md            # layout decisions, project 04 (written before the rendering code)
 ├── ARCHITECTURE.md            # why this repo is structured this way
 ├── assets/fonts/               # Lora, Inter, IBM Plex Mono - static instances (see ARCHITECTURE.md section 8)
 ├── src/hansard_pm_portfolio/
@@ -30,11 +33,13 @@ hansard-pm-portfolio/
 │       ├── common.py           # shared banner/save/dark-axes helpers
 │       ├── style_duel.py       # project 01's plotting functions
 │       ├── topic_heatmap.py    # project 02's plotting functions
-│       └── pm_handover.py      # project 03's plotting functions
+│       ├── pm_handover.py      # project 03's plotting functions
+│       └── annual_recap.py     # project 04's plotting function
 ├── notebooks/
 │   ├── 01_style_duel.ipynb     # narrated, already executed, produces project 01's 3 images
 │   ├── 02_topic_heatmap.ipynb  # narrated, already executed, produces project 02's 4 images
-│   └── 03_pm_handover.ipynb    # narrated, already executed, produces project 03's 3 images
+│   ├── 03_pm_handover.ipynb    # narrated, already executed, produces project 03's 3 images
+│   └── 04_annual_recap.ipynb   # narrated, already executed, produces project 04's 2 images
 ├── portfolio/
 │   ├── 01_style_duel/
 │   │   ├── README.md           # the polished, recruiter-facing writeup
@@ -42,9 +47,12 @@ hansard-pm-portfolio/
 │   ├── 02_topic_heatmap/
 │   │   ├── README.md
 │   │   └── assets/             # banner.png, heatmap_main.png, small_multiples.png, covid_zoom.png
-│   └── 03_pm_handover/
+│   ├── 03_pm_handover/
+│   │   ├── README.md
+│   │   └── assets/             # banner.png, transition_main.png, transition_timeline_secondary.png
+│   └── 04_annual_recap/
 │       ├── README.md
-│       └── assets/             # banner.png, transition_main.png, transition_timeline_secondary.png
+│       └── assets/             # banner.png, annual_recap_main.png
 └── tests/
 ```
 

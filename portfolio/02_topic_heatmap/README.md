@@ -80,3 +80,4 @@ Prerequisite: `hansard-pm-nlp` cloned as a sibling directory (`../hansard-pm-nlp
 - [`phase5_lda_report.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/data/processed/phase5_lda_report.md): full technical report of the LDA model
 - [`phase5_topic_comparison_report.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/data/processed/phase5_topic_comparison_report.md): LDA vs BERTopic comparison
 - [`WRITEUP.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/WRITEUP.md): full write-up of the analysis project
+- [Project 04, the recap](../04_annual_recap/README.md): this heatmap's monthly detail condensed into one dominant theme per year, alongside the other 3 projects

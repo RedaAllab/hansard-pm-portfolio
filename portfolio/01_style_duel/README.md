@@ -76,3 +76,4 @@ Prerequisite: `hansard-pm-nlp` cloned as a sibling directory (`../hansard-pm-nlp
 - [`hansard-pm-nlp`](https://github.com/RedaAllab/hansard-pm-nlp): source repo for the data and model
 - [`phase6_classifier_report.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/data/processed/phase6_classifier_report.md): full technical report of the classifier
 - [`WRITEUP.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/WRITEUP.md): full write-up of the analysis project
+- [Project 04, the recap](../04_annual_recap/README.md): this radar's traits condensed into one tone marker per year, alongside the other 3 projects
