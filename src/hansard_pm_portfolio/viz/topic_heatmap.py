@@ -119,23 +119,23 @@ def plot_topic_heatmap(monthly: pd.DataFrame, tenures: pd.DataFrame) -> Figure:
     # them, which otherwise reads as one crowded line of text.
     _draw_pm_transitions(ax, tenures, chart_end, y_bottom=n_topics + 1.9)
 
-    fig.text(0.5, 0.965, "LA CARTE THERMIQUE DES THÈMES", ha="center",
+    fig.text(0.5, 0.95, "THE THEMATIC HEATMAP", ha="center",
               fontsize=style.TITLE_SIZE, fontweight="bold", color=style.TEXT_PRIMARY,
               fontfamily=style.TITLE_FONT)
-    fig.text(0.5, 0.925, "7 ans de politique britannique, mois par mois", ha="center",
+    fig.text(0.5, 0.91, "7 years of British politics, month by month", ha="center",
               fontsize=style.SUBTITLE_SIZE, color=style.TEXT_SECONDARY,
               fontfamily=style.SUBTITLE_FONT)
 
-    fig.subplots_adjust(top=0.86, bottom=0.26, left=0.30, right=0.95)
+    fig.subplots_adjust(top=0.84, bottom=0.26, left=0.30, right=0.95)
 
     cbar = fig.colorbar(im, ax=ax, orientation="horizontal", fraction=0.04, pad=0.22,
                          aspect=40)
     cbar.set_ticks([0, monthly.values.max()])
-    cbar.set_ticklabels(["faible", "élevé"])
+    cbar.set_ticklabels(["low", "high"])
     cbar.ax.tick_params(colors=style.TEXT_SECONDARY, labelsize=style.CRISIS_LABEL_SIZE)
     cbar.outline.set_visible(False)
 
-    fig.text(0.95, 0.02, "Source : Hansard API · hansard-pm-nlp", ha="right",
+    fig.text(0.95, 0.02, "Source: Hansard API · hansard-pm-nlp", ha="right",
               fontsize=style.SOURCE_SIZE, color=style.SECONDARY, fontfamily=style.BODY_FONT)
     return fig
 
@@ -188,10 +188,10 @@ def plot_topic_small_multiples(monthly: pd.DataFrame, tenures: pd.DataFrame) -> 
     for ax in axes_flat[len(topics):]:
         ax.set_visible(False)
 
-    fig.suptitle("Chaque thème, mois par mois", x=0.06, ha="left", fontsize=14,
+    fig.suptitle("Each theme, month by month", x=0.06, ha="left", fontsize=14,
                  color=style.TEXT_PRIMARY, fontfamily=style.TITLE_FONT, fontweight="bold")
-    fig.text(0.06, 0.925, "Les 13 thèmes séparément - un panneau par thème plutôt qu'une "
-             "légende à 13 couleurs", fontsize=9, color=style.TEXT_SECONDARY,
+    fig.text(0.06, 0.925, "The 13 themes separately, one panel per theme rather than a "
+             "13 color legend", fontsize=9, color=style.TEXT_SECONDARY,
              fontfamily=style.SUBTITLE_FONT)
     fig.subplots_adjust(top=0.85, bottom=0.08, left=0.04, right=0.98, hspace=0.55, wspace=0.15)
     return fig
@@ -220,7 +220,7 @@ def plot_covid_zoom(monthly: pd.DataFrame) -> Figure:
         ax.fill_between(zoomed.index, zoomed[topic], color=style.ACCENT, alpha=0.2)
         ax.axvspan(pd.Timestamp(covid_start), pd.Timestamp(covid_end), color=style.SURFACE,
                   alpha=0.4, zorder=0, lw=0)
-        ax.set_title(topic.replace("Covid-19 : ", ""), fontsize=10, color=style.TEXT_PRIMARY,
+        ax.set_title(topic.replace("Covid-19: ", ""), fontsize=10, color=style.TEXT_PRIMARY,
                      fontfamily=style.SUBTITLE_FONT, fontweight="bold")
         ax.set_ylim(0, y_max)
         ax.xaxis.set_major_locator(mdates.YearLocator())
@@ -231,13 +231,13 @@ def plot_covid_zoom(monthly: pd.DataFrame) -> Figure:
             spine.set_visible(False)
 
     axes[0].set_yticks([0, y_max])
-    axes[0].set_yticklabels(["faible", "élevé"], fontsize=style.CRISIS_LABEL_SIZE,
+    axes[0].set_yticklabels(["low", "high"], fontsize=style.CRISIS_LABEL_SIZE,
                             color=style.TEXT_SECONDARY, fontfamily=style.BODY_FONT)
 
-    fig.suptitle("Covid-19 : trois thèmes, pas un seul", x=0.06, ha="left", fontsize=14,
+    fig.suptitle("Covid-19: three themes, not one", x=0.06, ha="left", fontsize=14,
                  color=style.TEXT_PRIMARY, fontfamily=style.TITLE_FONT, fontweight="bold")
-    fig.text(0.06, 0.90, "Contrairement à Ukraine/Russie, jamais fusionnés : trois "
-             "sous-phases distinctes d'une même crise.",
+    fig.text(0.06, 0.90, "Unlike Ukraine/Russia, never merged: three distinct "
+             "sub-phases of the same crisis.",
              fontsize=9, color=style.TEXT_SECONDARY, fontfamily=style.SUBTITLE_FONT)
     fig.subplots_adjust(top=0.78, bottom=0.12, left=0.08, right=0.96, wspace=0.15)
     return fig

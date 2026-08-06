@@ -1,209 +1,209 @@
-# STYLE_DUEL.md — Spécification de conception : « Le duel de style »
-> Ce document est une spécification complète, autosuffisante : tout ce qu'il faut pour construire le visuel et le README sans avoir à prendre de nouvelle décision de design est défini ici.
+# STYLE_DUEL.md: Design specification for "The style duel"
+> This document is a complete, self-sufficient specification: everything needed to build the visual and the README without having to make a new design decision is defined here.
 ---
-## 0. Cohérence avec l'identité déjà présente dans le dépôt
-Avant de proposer quoi que ce soit de nouveau, voici ce que la documentation du dépôt permet de vérifier :
-- **Thème déjà fixé** : `.streamlit/config.toml` pin `theme.base = "dark"` pour le dashboard. Le README ne mentionne aucune surcharge de couleurs au-delà de ce pin — le dashboard utilise donc très probablement la palette sombre **par défaut** de Streamlit (`backgroundColor #0E1117`, `secondaryBackgroundColor #262730`, `textColor #FAFAFA`), sauf personnalisation non documentée dans `app.py`. **Point à vérifier toi-même avant de démarrer** : ouvre `app/app.py`, cherche la fonction `_dark()` mentionnée dans le README, et si elle définit des couleurs différentes de celles ci-dessous, aligne la palette de ce document dessus — sinon, les valeurs ci-dessous sont un choix sûr car elles reprennent exactement les valeurs par défaut du thème déjà activé.
-- **Convention de nommage des documents racine** : `README.md`, `WRITEUP.md` (tout en majuscules, sans tiret) — `STYLE_DUEL.md` suit exactement cette convention, aucun changement nécessaire.
-- **Convention des notebooks** : préfixe numéroté + snake_case (`01_corpus_overview.ipynb`...) — le nouveau notebook doit donc s'appeler `notebooks/portfolio_01_style_duel.ipynb`.
-- **Style de documentation** : le `WRITEUP.md` est rédigé pour un lecteur "technique mais non spécialiste" ; ce nouveau document doit descendre encore d'un cran, pour un lecteur **non technique** (recruteur, LinkedIn).
-- **Aucune charte graphique explicite (logo, palette documentée, guide de style)** n'existe dans le dépôt au-delà du thème sombre Streamlit — ce document crée donc la première charte graphique formelle du projet, en cohérence avec ce qui existe déjà plutôt qu'en rupture.
+## 0. Consistency with the identity already present in the repo
+Before proposing anything new, here is what the repo's documentation lets us verify:
+- **Theme already fixed**: `.streamlit/config.toml` pins `theme.base = "dark"` for the dashboard. The README mentions no color overrides beyond that pin, so the dashboard very likely uses Streamlit's **default** dark palette (`backgroundColor #0E1117`, `secondaryBackgroundColor #262730`, `textColor #FAFAFA`), unless there is undocumented customization in `app.py`. **Point to verify yourself before starting**: open `app/app.py`, look for the `_dark()` function mentioned in the README, and if it defines colors different from the ones below, align this document's palette with it. Otherwise, the values below are a safe choice since they reuse exactly the already-activated theme's default values.
+- **Root document naming convention**: `README.md`, `WRITEUP.md` (all caps, no hyphen). `STYLE_DUEL.md` follows this convention exactly, no change needed.
+- **Notebook convention**: numbered prefix + snake_case (`01_corpus_overview.ipynb`...). The new notebook should therefore be called `notebooks/portfolio_01_style_duel.ipynb`.
+- **Documentation style**: `WRITEUP.md` is written for a "technical but not a specialist" reader; this new document should go one level further, for a **non-technical** reader (recruiter, LinkedIn).
+- **No explicit visual identity** (logo, documented palette, style guide) exists in the repo beyond the Streamlit dark theme, so this document creates the project's first formal visual identity, in keeping with what already exists rather than breaking from it.
 ---
-## 1. Vision du projet
-- **Objectif** : montrer, en un seul coup d'œil, que chaque Premier ministre britannique a un style oratoire reconnaissable — et que cette affirmation n'est pas une impression, mais un résultat déjà validé par un modèle de classification (91,5–93,2 % d'exactitude).
-- **Public cible** : recruteur ou manager Data qui scrolle un profil GitHub/LinkedIn en quelques secondes ; aucune connaissance en NLP ou en statistiques ne doit être requise pour comprendre le message.
-- **Message clé** : *"Le style de langage à lui seul suffit à identifier qui parle — et voici les 6 traits qui le prouvent."*
-- **Storytelling** : on part d'une question universelle ("peut-on reconnaître quelqu'un juste à sa façon de parler ?"), on répond avec un visuel immédiat (le radar), puis on ancre la réponse dans un chiffre validé (l'accuracy du classifieur) pour transformer une intuition en preuve.
-- **Ce que le visiteur doit comprendre en moins de 10 secondes** : "il existe 4 signatures de style distinctes, une par Premier ministre, et ce n'est pas une coïncidence — c'est mesurable."
+## 1. Project vision
+- **Goal**: show, at a single glance, that every UK Prime Minister has a recognizable speaking style, and that this claim is not an impression but a result already validated by a classification model (91.5 to 93.2% accuracy).
+- **Target audience**: a recruiter or Data manager scrolling a GitHub/LinkedIn profile for a few seconds; no NLP or statistics knowledge should be required to understand the message.
+- **Key message**: *"Language style alone is enough to identify who is speaking, and here are the 6 traits that prove it."*
+- **Storytelling**: start from a universal question ("can you recognize someone just from how they talk?"), answer it with an immediate visual (the radar), then anchor the answer in a validated number (the classifier's accuracy) to turn an intuition into evidence.
+- **What the visitor should understand in under 10 seconds**: "there are 4 distinct style signatures, one per Prime Minister, and it is not a coincidence, it is measurable."
 ---
-## 2. Direction artistique
-- **Style retenu : "data journalism sobre"**, à mi-chemin entre le Financial Times/The Economist (rigueur, sérieux, données au centre) et un dashboard produit moderne (contraste net, hiérarchie claire). Justification : le public cible (recruteurs Data) reconnaît immédiatement ce registre comme "professionnel", sans tomber dans l'esthétique "corporate PowerPoint" (trop générique) ni "dashboard BI surchargé" (trop dense pour du non-technique).
-- **Ambiance recherchée** : sérieuse, factuelle, un peu "presse économique britannique" (cohérent avec le sujet — Parlement de Westminster).
-- **Niveau de sobriété** : élevé. Un seul visuel principal par page/post, peu d'éléments décoratifs, aucune icône superflue.
-- **Niveau d'interactivité** : nul pour les livrables portfolio (images statiques PNG) — l'interactivité existe déjà via le dashboard Streamlit en ligne, il ne faut pas la dupliquer. Un simple lien "Explorer en interactif →" suffit.
-- **Inspirations visuelles** : graphiques du *Financial Times* (fond sombre pour les visuels "long format", séries de couleurs discrètes, titres en une phrase complète plutôt qu'un label sec) ; *Our World in Data* pour la clarté des légendes et l'absence de chrome inutile ; l'esthétique native de Streamlit en mode sombre, pour la continuité avec le dashboard existant.
+## 2. Art direction
+- **Style chosen: "sober data journalism"**, halfway between the Financial Times/The Economist (rigor, seriousness, data at the center) and a modern product dashboard (sharp contrast, clear hierarchy). Rationale: the target audience (Data recruiters) immediately recognizes this register as "professional", without falling into "corporate PowerPoint" aesthetics (too generic) or an "overloaded BI dashboard" (too dense for a non-technical reader).
+- **Mood sought**: serious, factual, a bit "British financial press" (fitting given the subject: the Westminster Parliament).
+- **Level of restraint**: high. One single main visual per page/post, few decorative elements, no superfluous icons.
+- **Level of interactivity**: none for the portfolio deliverables (static PNG images), interactivity already exists via the live Streamlit dashboard, no need to duplicate it. A simple "Explore interactively" link is enough.
+- **Visual inspirations**: *Financial Times* charts (dark background for "long format" visuals, understated color series, titles as a full sentence rather than a terse label); *Our World in Data* for legend clarity and the absence of unnecessary chrome; Streamlit's native dark aesthetic, for continuity with the existing dashboard.
 ---
-## 3. Palette de couleurs
-| Couleur | Rôle | HEX | Pourquoi |
+## 3. Color palette
+| Color | Role | HEX | Why |
 |---|---|---|---|
-| Fond | fond des figures et de l'image héros | `#0E1117` | reprend la valeur par défaut du thème sombre Streamlit déjà activé (`theme.base = "dark"`) — continuité visuelle avec le dashboard |
-| Cartes / surfaces | encarts, légende, callout box | `#262730` | `secondaryBackgroundColor` par défaut de Streamlit en mode sombre — même famille que le fond |
-| Texte principal | titres, labels importants | `#FAFAFA` | contraste ~18:1 sur fond `#0E1117`, largement au-dessus du seuil WCAG AAA (7:1) |
-| Texte secondaire | légendes, notes de bas de page | `#9CA3AF` | gris moyen, hiérarchise sans nuire à la lisibilité (contraste > 4,5:1) |
-| Grille / bordures | axes discrets du radar | `#3A3D46` | assez visible pour structurer, assez discret pour ne pas distraire |
-| Principale / accent de marque | liens, soulignement de titre, badges | `#22D3EE` | couleur signature du projet, neutre politiquement (ni bleu conservateur ni rouge travailliste), cohérente sur tous les visuels |
-| Secondaire | éléments de support (axes, texte technique) | `#7C89A6` | bleu-gris neutre, discret |
-| Positive *(réservée, non utilisée dans ce projet)* | tendance à la hausse dans de futurs graphiques | `#4A90D9` | bleu plutôt que vert — évite la confusion rouge/vert la plus fréquente chez les daltoniens |
-| Négative *(réservée, non utilisée dans ce projet)* | tendance à la baisse | `#D9764A` | orange terracotta, forme une paire bleu/orange lisible pour les 3 types courants de daltonisme |
-**Palette catégorielle dédiée aux 4 Premiers ministres** (utilisée uniquement pour le radar — ne jamais la mélanger avec la palette positive/négative ci-dessus dans un même graphique) — issue de la palette **Okabe-Ito**, référence standard pour l'accessibilité daltonisme :
-| PM | HEX | Traitement |
+| Background | figure and hero image background | `#0E1117` | reuses the default value of the already-activated Streamlit dark theme (`theme.base = "dark"`), visual continuity with the dashboard |
+| Cards / surfaces | callout boxes, legend | `#262730` | Streamlit's default `secondaryBackgroundColor` in dark mode, same family as the background |
+| Primary text | titles, important labels | `#FAFAFA` | ~18:1 contrast on `#0E1117` background, well above the WCAG AAA threshold (7:1) |
+| Secondary text | captions, footnotes | `#9CA3AF` | medium grey, adds hierarchy without hurting readability (contrast > 4.5:1) |
+| Grid / borders | discreet radar axes | `#3A3D46` | visible enough to structure, discreet enough not to distract |
+| Primary / brand accent | links, title underline, badges | `#22D3EE` | the project's signature color, politically neutral (neither Conservative blue nor Labour red), consistent across all visuals |
+| Secondary | supporting elements (axes, technical text) | `#7C89A6` | neutral blue-grey, discreet |
+| Positive *(reserved, unused in this project)* | upward trend in future charts | `#4A90D9` | blue rather than green, avoids the most common red/green confusion for colorblind readers |
+| Negative *(reserved, unused in this project)* | downward trend | `#D9764A` | terracotta orange, forms a blue/orange pair readable across the 3 common types of color blindness |
+**Categorical palette dedicated to the 4 Prime Ministers** (used only for the radar, never mix with the positive/negative palette above in the same chart), taken from the **Okabe-Ito** palette, the standard reference for colorblind accessibility:
+| PM | HEX | Treatment |
 |---|---|---|
-| Boris Johnson | `#E69F00` (orange) | ligne pleine |
-| Liz Truss | `#56B4E9` (bleu ciel) | **ligne pointillée** + astérisque en légende ("49 jours de mandat — à lire avec prudence") |
-| Rishi Sunak | `#009E73` (vert bleuté) | ligne pleine |
-| Keir Starmer | `#CC79A7` (violet rosé) | ligne pleine |
-**Mode clair** : ce projet est pensé fond sombre uniquement (cohérence dashboard + lisibilité maximale pour un radar chart, qui perd en clarté sur fond blanc à cause du remplissage semi-transparent). **Ne pas** produire de version claire séparée — c'est une décision de sobriété, pas un oubli.
-**Daltonisme** : la combinaison Okabe-Ito + fond sombre a été spécifiquement conçue pour rester distinguable en deutéranopie, protanopie et tritanopie. Vérifier avec un simulateur (ex. Coblis, gratuit en ligne) avant publication finale.
+| Boris Johnson | `#E69F00` (orange) | solid line |
+| Liz Truss | `#56B4E9` (sky blue) | **dashed line** + asterisk in the legend ("49 day tenure, read with caution") |
+| Rishi Sunak | `#009E73` (teal green) | solid line |
+| Keir Starmer | `#CC79A7` (pink-purple) | solid line |
+**Light mode**: this project is designed dark-background only (consistency with the dashboard + maximum readability for a radar chart, which loses clarity on a white background because of the semi-transparent fill). **Do not** produce a separate light version; this is a restraint decision, not an oversight.
+**Color blindness**: the Okabe-Ito + dark background combination was specifically designed to stay distinguishable under deuteranopia, protanopia, and tritanopia. Verify with a simulator (e.g. Coblis, free online) before final publication.
 ---
-## 4. Typographie
-> ⚠️ **Point pratique important** : GitHub ne permet pas de charger des polices personnalisées dans le corps d'un README (le Markdown GitHub s'affiche toujours avec la police système de GitHub, non modifiable). Les choix de police ci-dessous s'appliquent donc à **deux endroits précis seulement** : le texte intégré directement dans les images de graphiques (Matplotlib/Plotly) et, si tu produis une image "bannière" ou un visuel de carrousel LinkedIn (via Pillow ou export HTML→image), le texte de cette image. Le texte du README lui-même reste en police système GitHub — c'est normal, ne pas chercher à le contourner.
-| Usage | Police (Google Fonts) | Poids | Où l'utiliser |
+## 4. Typography
+> ⚠️ **Important practical note**: GitHub does not allow loading custom fonts inside a README's body (GitHub Markdown always renders with GitHub's system font, which cannot be changed). The font choices below therefore apply to **two specific places only**: text embedded directly in chart images (Matplotlib/Plotly) and, if a "banner" image or a LinkedIn carousel visual is produced (via Pillow or an HTML-to-image export), that image's text. The README's own body text stays in GitHub's system font; that is expected, do not try to work around it.
+| Usage | Font (Google Fonts) | Weight | Where to use it |
 |---|---|---|---|
-| Titre principal (suptitle du graphique, bannière) | **Lora** | 700 (Bold) | titre du radar, titre de la bannière README |
-| Sous-titres | **Inter** | 600 (SemiBold) | sous-titre du graphique, en-têtes de section dans les images de carrousel |
-| Texte courant / légendes | **Inter** | 400 (Regular) | légende des 4 PM, notes de source |
-| Chiffres mis en avant | **IBM Plex Mono** | 500 (Medium) | le chiffre "91,5 %" affiché en gros dans le visuel secondaire — l'effet "chasse fixe" donne un rendu "précision de données" et évite toute ambiguïté entre 1/l/I |
-**Pourquoi ce trio fonctionne** : Lora (serif éditorial) pour le titre apporte le sérieux "presse économique" ; Inter (sans-serif très lisible, standard de facto des interfaces de données) pour tout le reste garde une lecture rapide ; IBM Plex Mono réservé aux chiffres crée un signal visuel clair "ceci est une donnée mesurée", sans multiplier les familles de police (3 maximum, règle de sobriété typographique).
+| Main title (chart suptitle, banner) | **Lora** | 700 (Bold) | radar title, README banner title |
+| Subtitles | **Inter** | 600 (SemiBold) | chart subtitle, section headers in carousel images |
+| Body text / captions | **Inter** | 400 (Regular) | the 4 PM legend, source notes |
+| Highlighted figures | **IBM Plex Mono** | 500 (Medium) | the "91.5%" figure shown large in the secondary visual; the monospace effect gives a "precise data" feel and removes any ambiguity between 1/l/I |
+**Why this trio works**: Lora (an editorial serif) for the title brings "financial press" seriousness; Inter (a highly readable sans-serif, the de facto standard for data interfaces) for everything else keeps reading fast; IBM Plex Mono reserved for figures creates a clear "this is a measured data point" signal, without adding more font families (3 maximum, a typographic restraint rule).
 ---
-## 5. Mise en page
-- **Disposition générale** : une image héros unique (le radar), pas de grille multi-graphiques dans la même image — la clarté prime sur l'exhaustivité.
-- **Marges** : 60 px minimum de marge intérieure autour du radar dans le canevas de la figure, pour que rien ne touche les bords.
-- **Espacement** : 24 px entre le sous-titre et le graphique, 32 px entre le graphique et la légende, 16 px entre la légende et la note de source.
-- **Tailles de titre** : suptitle 20 pt, sous-titre 12 pt, labels d'axes du radar 11 pt, légende 11 pt, note de source 9 pt.
-- **Hiérarchie visuelle** : titre > radar > légende > note de source, dans cet ordre de poids visuel (taille + contraste de couleur).
-- **Largeur optimale** : image héros exportée en 1600×1600 px (carré — un radar chart se lit mieux en format carré), affichée à ~800×800 px dans le README (GitHub redimensionne automatiquement).
-- **Équilibre texte/graphique** : dans le README, ne jamais faire suivre le radar de plus de 3 phrases avant la prochaine sous-partie — le visuel doit rester l'élément dominant de la page.
-### Schéma ASCII — figure principale (radar)
+## 5. Layout
+- **Overall layout**: a single hero image (the radar), no multi-chart grid in the same image; clarity comes before exhaustiveness.
+- **Margins**: at least 60px of inner padding around the radar in the figure canvas, so nothing touches the edges.
+- **Spacing**: 24px between the subtitle and the chart, 32px between the chart and the legend, 16px between the legend and the source note.
+- **Title sizes**: suptitle 20pt, subtitle 12pt, radar axis labels 11pt, legend 11pt, source note 9pt.
+- **Visual hierarchy**: title > radar > legend > source note, in that order of visual weight (size + color contrast).
+- **Optimal width**: hero image exported at 1600x1600px (square, a radar chart reads better in a square format), displayed at about 800x800px in the README (GitHub resizes automatically).
+- **Text/chart balance**: in the README, never let more than 3 sentences follow the radar before the next subsection; the visual must stay the dominant element on the page.
+### ASCII diagram: main figure (radar)
 ```
 ┌──────────────────────────────────────────────┐
-│         LE DUEL DE STYLE                      │  Lora 20pt bold, #FAFAFA
-│  Ce que 6 traits stylométriques révèlent       │  Inter 12pt, #9CA3AF
+│         THE STYLE DUEL                        │  Lora 20pt bold, #FAFAFA
+│  What 6 stylometric traits reveal              │  Inter 12pt, #9CA3AF
 │                                                │
 │                ╭─────────────╮                │
 │             ╱──┤             ├──╲             │
 │           ╱    │             │    ╲           │
-│          │     │   RADAR     │     │          │  6 axes, grille #3A3D46
+│          │     │   RADAR     │     │          │  6 axes, grid #3A3D46
 │           ╲    │  (6 axes)   │    ╱           │
 │             ╲──┤             ├──╱             │
 │                ╰─────────────╯                │
 │                                                │
-│   ● Johnson  ┄ Truss*  ● Sunak  ● Starmer      │  légende horizontale, Inter 11pt
-│   * 49 jours de mandat — à lire avec prudence  │  Inter 9pt, #9CA3AF
+│   ● Johnson  ┄ Truss*  ● Sunak  ● Starmer      │  horizontal legend, Inter 11pt
+│   * 49 day tenure, read with caution           │  Inter 9pt, #9CA3AF
 │                                                │
-│         Source : Hansard API · hansard-pm-nlp  │  Inter 9pt, #7C89A6
+│         Source: Hansard API · hansard-pm-nlp  │  Inter 9pt, #7C89A6
 └──────────────────────────────────────────────┘
-   fond #0E1117
+   background #0E1117
 ```
-### Schéma ASCII — page README
+### ASCII diagram: README page
 ```
 ┌─────────────────────────────────────────┐
-│ [Bannière 1600×400, titre + badges]      │
+│ [Banner 1600x400, title + badges]        │
 ├─────────────────────────────────────────┤
-│ # Le duel de style                       │
-│ Accroche en 1 phrase                     │
+│ # The style duel                         │
+│ One-sentence hook                        │
 ├─────────────────────────────────────────┤
-│ [IMAGE HÉROS : radar_main.png]           │
+│ [HERO IMAGE: radar_main.png]             │
 ├─────────────────────────────────────────┤
-│ ## Le message en 3 phrases               │
+│ ## The message in 3 sentences            │
 ├─────────────────────────────────────────┤
-│ ## Comment ce visuel a été construit     │
-│  - 4 puces + lien phase6_classifier_report.md │
+│ ## How this visual was built             │
+│  - 4 bullets + link to phase6_classifier_report.md │
 ├─────────────────────────────────────────┤
-│ ## Ce que ça révèle (bullets)            │
+│ ## What it reveals (bullets)             │
 ├─────────────────────────────────────────┤
-│ [img secondaire 1]  [img secondaire 2]   │
+│ [secondary image 1]  [secondary image 2] │
 ├─────────────────────────────────────────┤
-│ ## Limites                               │
+│ ## Limitations                           │
 ├─────────────────────────────────────────┤
-│ ## Reproduire ce visuel (commande)       │
+│ ## Reproducing this visual (command)     │
 ├─────────────────────────────────────────┤
-│ Liens : dashboard live · write-up · LinkedIn │
+│ Links: live dashboard · write-up · LinkedIn │
 └─────────────────────────────────────────┘
 ```
 ---
-## 6. Design des visualisations
-### Visuel principal — Radar chart
-- **Type** : radar/spider chart, 6 axes, 4 séries superposées (une par PM), remplissage semi-transparent (alpha 0,15) sous chaque ligne.
-- **Dimensions** : figure Matplotlib 8×8 pouces, export à 200 dpi → 1600×1600 px.
-- **Couleurs** : palette catégorielle PM définie en section 3 ; fond `#0E1117` ; grille radiale `#3A3D46`.
-- **Taille des polices** : titre 20 pt, labels des 6 axes 11 pt (`#FAFAFA`), graduations radiales 8 pt (`#9CA3AF`, à afficher discrètement, 3 graduations maximum).
-- **Style des axes** : les 6 axes correspondent aux 6 traits déjà identifiés comme les plus discriminants par le classifieur H1 (MTLD, lisibilité Flesch-Kincaid, `hedge_rate`, certitude nette, `pos_INTJ`, fréquence de "not") — valeurs normalisées 0–1 (min-max sur les 4 PM), pas d'échelle brute affichée (elle n'aurait pas de sens pour un lecteur non technique).
-- **Style de la grille** : radiale uniquement (cercles concentriques), 3 niveaux, épaisseur 0,5 pt, aucune grille angulaire supplémentaire.
-- **Annotations** : un seul astérisque sur la ligne Truss, renvoyant à la note de bas de légende — aucune autre annotation dans le corps du graphique (garder le radar "propre").
-- **Légende** : horizontale, sous le graphique, pas dans un coin (les légendes en coin de radar chevauchent souvent les données).
-- **Animation** : aucune — export statique uniquement, cohérent avec le choix "sobre" de la section 2.
-*Pourquoi ces choix améliorent la lecture* : limiter à 6 axes évite la saturation visuelle typique des radar charts à 10+ axes (illisibles) ; normaliser 0–1 permet une comparaison directe entre 6 métriques d'échelles très différentes (un score de lisibilité et un taux de hedging n'ont pas la même unité) ; le remplissage semi-transparent laisse voir les zones de chevauchement entre PM, renforçant visuellement le message "les styles se distinguent mais ne sont jamais totalement opposés."
-### Visuel secondaire 1 — Importances de permutation (bar chart)
-- **Type** : bar chart horizontal, 6 barres (les mêmes 6 traits que le radar, dans le même ordre) — sert à justifier pourquoi ces 6 axes ont été choisis.
-- **Dimensions** : 8×5 pouces, 200 dpi.
-- **Couleurs** : une seule couleur (`#22D3EE`, l'accent de marque — volontairement différente des couleurs PM pour signaler "ceci concerne le modèle, pas un PM en particulier").
-- **Police** : titre 16 pt, labels 11 pt, valeurs affichées en bout de barre en `IBM Plex Mono` 10 pt.
-- **Grille** : verticale légère uniquement (`#3A3D46`), spines haut/droite supprimées.
-- **Légende** : aucune (une seule série).
-### Visuel secondaire 2 — Matrice de confusion simplifiée
-- **Type** : heatmap 3×3 (Truss exclue, cohérent avec le dépôt), valeurs en pourcentage.
-- **Dimensions** : 6×6 pouces, 200 dpi, carré.
-- **Couleurs** : dégradé séquentiel `Cividis` (colorblind-safe), diagonale mise en évidence par un contour `#22D3EE` de 2 pt.
-- **Police** : valeurs en cellule `IBM Plex Mono` 14 pt, labels d'axes `Inter` 11 pt.
-- **Annotation** : une seule phrase sous le graphique en langage courant ("Le modèle retrouve le bon Premier ministre dans 9 cas sur 10"), pas de jargon "accuracy/precision/recall" dans l'image elle-même (réservé au README).
+## 6. Visualization design
+### Main visual: radar chart
+- **Type**: radar/spider chart, 6 axes, 4 overlaid series (one per PM), semi-transparent fill (alpha 0.15) under each line.
+- **Dimensions**: Matplotlib figure 8x8 inches, exported at 200 dpi, giving 1600x1600px.
+- **Colors**: PM categorical palette defined in section 3; background `#0E1117`; radial grid `#3A3D46`.
+- **Font sizes**: title 20pt, the 6 axis labels 11pt (`#FAFAFA`), radial tick labels 8pt (`#9CA3AF`, shown discreetly, 3 gridlines maximum).
+- **Axis design**: the 6 axes correspond to the 6 traits already identified as the most discriminant by the H1 classifier (MTLD, Flesch-Kincaid readability, `hedge_rate`, net certainty, `pos_INTJ`, frequency of "not"), values normalized 0-1 (min-max across the 4 PMs), no raw scale shown (it would not be meaningful to a non-technical reader).
+- **Grid style**: radial only (concentric circles), 3 levels, 0.5pt thickness, no additional angular grid.
+- **Annotations**: a single asterisk on Truss's line, referring to the footnote below the legend; no other annotation inside the chart body (keep the radar "clean").
+- **Legend**: horizontal, below the chart, not in a corner (corner legends on a radar often overlap the data).
+- **Animation**: none, static export only, consistent with the "restrained" choice in section 2.
+*Why these choices improve readability*: limiting to 6 axes avoids the visual saturation typical of radar charts with 10+ axes (unreadable); normalizing 0-1 allows a direct comparison across 6 metrics with very different scales (a readability score and a hedging rate do not share a unit); the semi-transparent fill lets overlap areas between PMs show through, visually reinforcing the message that "styles are distinct but never fully opposite."
+### Secondary visual 1: permutation importance (bar chart)
+- **Type**: horizontal bar chart, 6 bars (the same 6 traits as the radar, in the same order), used to justify why these 6 axes were chosen.
+- **Dimensions**: 8x5 inches, 200 dpi.
+- **Colors**: a single color (`#22D3EE`, the brand accent, deliberately different from the PM colors to signal "this is about the model, not a specific PM").
+- **Font**: title 16pt, labels 11pt, values shown at the end of each bar in `IBM Plex Mono` 10pt.
+- **Grid**: light vertical grid only (`#3A3D46`), top/right spines removed.
+- **Legend**: none (a single series).
+### Secondary visual 2: simplified confusion matrix
+- **Type**: 3x3 heatmap (Truss excluded, consistent with the repo), values in percent.
+- **Dimensions**: 6x6 inches, 200 dpi, square.
+- **Colors**: `Cividis` sequential gradient (colorblind-safe), diagonal highlighted with a 2pt `#22D3EE` outline.
+- **Font**: cell values in `IBM Plex Mono` 14pt, axis labels in `Inter` 11pt.
+- **Annotation**: a single plain language sentence below the chart ("The model identifies the correct Prime Minister 9 times out of 10"), no "accuracy/precision/recall" jargon inside the image itself (reserved for the README).
 ---
-## 7. Ergonomie
-- **Lisibilité** : taille de police minimale 9 pt dans toute image exportée (en dessous, illisible une fois l'image redimensionnée par GitHub/LinkedIn).
-- **Contraste** : tout texte sur fond `#0E1117` doit atteindre au moins un ratio de 4,5:1 (WCAG AA) ; les couleurs `#FAFAFA` et `#9CA3AF` définies en section 3 respectent cette contrainte, ne pas les assombrir davantage.
-- **Accessibilité** : palette Okabe-Ito + vérification par simulateur de daltonisme avant publication (voir section 3) ; ne jamais coder une information uniquement par la couleur — le style de ligne (plein/pointillé pour Truss) double toujours l'information couleur.
-- **Simplicité** : un seul message par image ; si une idée nécessite un deuxième graphique, c'est qu'elle doit devenir un visuel secondaire, pas un ajout au visuel principal.
-- **Charge cognitive** : maximum 4 séries de couleur simultanées dans un même graphique (ici : 4 PM) — au-delà, la lecture devient un exercice de décodage plutôt qu'une lecture immédiate.
-- **Cohérence graphique** : mêmes couleurs PM, même typographie, même style de grille sur les 3 images de ce projet ET sur celles du projet `THEMATIC_HEATMAP.md` (palette catégorielle PM partagée entre les deux projets).
-- **Responsive** : non applicable (images statiques) — mais toujours exporter en haute résolution (200 dpi minimum) pour rester net sur mobile, où la majorité du trafic LinkedIn est consultée.
+## 7. Usability
+- **Readability**: minimum font size 9pt in any exported image (below that, unreadable once GitHub/LinkedIn resizes the image).
+- **Contrast**: any text on a `#0E1117` background must reach at least a 4.5:1 ratio (WCAG AA); the `#FAFAFA` and `#9CA3AF` colors defined in section 3 meet this constraint, do not darken them further.
+- **Accessibility**: Okabe-Ito palette + verification with a color blindness simulator before publishing (see section 3); never encode information through color alone, line style (solid/dashed for Truss) always doubles the color information.
+- **Simplicity**: one message per image; if an idea needs a second chart, it should become a secondary visual, not an addition to the main one.
+- **Cognitive load**: maximum 4 simultaneous color series in a single chart (here: 4 PMs); beyond that, reading becomes a decoding exercise rather than an immediate read.
+- **Visual consistency**: same PM colors, same typography, same grid style across the 3 images of this project AND those of the `THEMATIC_HEATMAP.md` project (PM categorical palette shared between the two projects).
+- **Responsive**: not applicable (static images), but always export at high resolution (200 dpi minimum) to stay sharp on mobile, where most LinkedIn traffic is viewed.
 ---
-## 8. Icônes et illustrations
-- **Bibliothèque recommandée** : **Lucide** (lucide.dev) — open-source, licence MIT, style trait fin cohérent avec l'esthétique "sobre" recherchée, disponible en SVG téléchargeable individuellement (pas besoin de framework web).
-- **Pictogrammes adaptés** : une icône "radar" ou "target" en en-tête du README (section titre) ; une icône "git-branch" ou "database" à côté du lien vers le dépôt d'extraction ; icônes "github" et "linkedin" pour les badges de fin de README (via shields.io, voir section 9).
-- **Où les placer** : uniquement dans le README (jamais dans les images de graphique elles-mêmes, qui doivent rester 100 % données) — en préfixe de titre de section ou dans la ligne de badges.
-- **À éviter** : emoji décoratifs en excès (🚀✨🔥…) — au maximum 1 emoji sobre en titre principal si souhaité, aucun dans les sous-titres ; cliparts, mascottes, icônes en dégradé/skeuomorphes qui contrediraient le registre "presse économique" choisi en section 2.
+## 8. Icons and illustrations
+- **Recommended library**: **Lucide** (lucide.dev), open source, MIT license, thin-stroke style consistent with the "restrained" aesthetic sought, available as individually downloadable SVGs (no web framework needed).
+- **Suitable pictograms**: a "radar" or "target" icon at the top of the README (title section); a "git-branch" or "database" icon next to the link to the extraction repo; "github" and "linkedin" icons for the badges at the end of the README (via shields.io, see section 9).
+- **Where to place them**: only in the README (never inside the chart images themselves, which must stay 100% data), as a prefix to a section title or in the badge row.
+- **To avoid**: excessive decorative emoji (🚀✨🔥...), at most 1 sober emoji in the main title if desired, none in subtitles; clipart, mascots, gradient/skeuomorphic icons that would contradict the "financial press" register chosen in section 2.
 ---
-## 9. README GitHub
-**Structure recommandée pour `portfolio/01_style_duel/README.md`** :
-1. **Bannière** (1600×400 px, fond `#0E1117`, titre "Le duel de style" en Lora, sous-titre en Inter) — image statique simple, pas besoin d'animation.
-2. **Badges** (via shields.io) : version Python, lien "Dashboard live", lien vers le dépôt principal `hansard-pm-nlp`, badge de licence si applicable.
-3. **Accroche** : une phrase, gras, reprenant le message clé de la section 1.
-4. **Image héros** : `radar_main.png`, pleine largeur.
-5. **Sommaire** (ancres Markdown) si le README dépasse ~150 lignes — sinon superflu pour un document de cette taille.
-6. **Section "Le message en 3 phrases"**.
-7. **Section "Comment ce visuel a été construit"** : 3-4 puces vulgarisées, avec lien explicite vers `phase6_classifier_report.md` pour le lecteur qui veut la preuve technique complète.
-8. **Section "Ce que ça révèle"** : bullets.
-9. **Galerie des visuels secondaires** (les 2 images côte à côte si le rendu Markdown le permet, sinon l'une sous l'autre).
-10. **Section "Limites"** — honnêteté méthodologique (Truss, portée du style vs contenu).
-11. **Section "Reproduire ce visuel"** — une commande unique (`jupyter nbconvert --execute notebooks/portfolio_01_style_duel.ipynb`).
-12. **Conclusion / liens** : dashboard interactif, write-up complet, post LinkedIn.
-**GIF** : non nécessaire pour ce projet (le radar est un visuel statique par nature) — réserver le budget GIF au projet `THEMATIC_HEATMAP.md`, où l'évolution temporelle s'y prête mieux.
+## 9. GitHub README
+**Recommended structure for `portfolio/01_style_duel/README.md`**:
+1. **Banner** (1600x400px, `#0E1117` background, title "The style duel" in Lora, subtitle in Inter), a simple static image, no animation needed.
+2. **Badges** (via shields.io): Python version, "Live dashboard" link, link to the main `hansard-pm-nlp` repo, license badge if applicable.
+3. **Hook**: one bold sentence, reusing the key message from section 1.
+4. **Hero image**: `radar_main.png`, full width.
+5. **Table of contents** (Markdown anchors) if the README exceeds about 150 lines; otherwise unnecessary for a document this size.
+6. **"The message in 3 sentences" section**.
+7. **"How this visual was built" section**: 3 to 4 plain language bullets, with an explicit link to `phase6_classifier_report.md` for the reader who wants the full technical proof.
+8. **"What it reveals" section**: bullets.
+9. **Secondary visuals gallery** (the 2 images side by side if the Markdown rendering allows it, otherwise stacked).
+10. **"Limitations" section**: methodological honesty (Truss, style vs. content scope).
+11. **"Reproducing this visual" section**: a single command (`jupyter nbconvert --execute notebooks/portfolio_01_style_duel.ipynb`).
+12. **Conclusion / links**: interactive dashboard, full write-up, LinkedIn post.
+**GIF**: not needed for this project (the radar is inherently a static visual); reserve the GIF budget for the `THEMATIC_HEATMAP.md` project, where the time evolution suits it better.
 ---
-## 10. Publication LinkedIn
-- **Images à produire** : réutiliser directement `radar_main.png` (déjà au format carré 1600×1600, idéal pour un post LinkedIn) + une version recadrée 1080×1350 (portrait) du visuel d'importances de permutation pour un éventuel second slide.
-- **Format** : **image unique** en premier post (le radar seul est suffisamment fort pour ne pas nécessiter de carrousel) ; si carrousel souhaité (2-3 slides), ordre : (1) radar seul avec accroche en légende de post, (2) bar chart des importances avec la question "pourquoi ces 6 traits ?", (3) matrice de confusion simplifiée avec le chiffre clé en gros.
-- **Narration du post texte** : commencer par une question ("Peut-on reconnaître un Premier ministre juste à sa façon de parler ?"), donner la réponse en une phrase, mentionner le chiffre (91,5 % / 93,2 %), terminer par un lien vers le dépôt GitHub et le dashboard live.
-- **Éléments qui attirent l'œil** : le contraste du fond sombre `#0E1117` contre le fil LinkedIn (très majoritairement blanc/clair) crée un arrêt visuel naturel dans le scroll — argument supplémentaire en faveur du thème sombre choisi en section 3.
+## 10. LinkedIn publication
+- **Images to produce**: reuse `radar_main.png` directly (already square at 1600x1600, ideal for a LinkedIn post) + a cropped 1080x1350 (portrait) version of the permutation importance visual for a possible second slide.
+- **Format**: **single image** for the first post (the radar alone is strong enough not to need a carousel); if a carousel is wanted (2-3 slides), order: (1) the radar alone with the hook as the post caption, (2) the importance bar chart with the question "why these 6 traits?", (3) the simplified confusion matrix with the key figure shown large.
+- **Post text narration**: open with a question ("Can you recognize a Prime Minister just from how they speak?"), give the answer in one sentence, mention the figure (91.5% / 93.2%), end with a link to the GitHub repo and the live dashboard.
+- **Eye-catching elements**: the contrast of the `#0E1117` dark background against the LinkedIn feed (mostly white/light) creates a natural visual stop while scrolling, an additional argument in favor of the dark theme chosen in section 3.
 ---
-## 11. Checklist de réalisation
+## 11. Build checklist
 **Design**
-- [ ] Vérifier les couleurs réelles de `_dark()` dans `app/app.py` et ajuster la palette si besoin
-- [ ] Simuler la palette PM sous un outil de daltonisme (Coblis ou équivalent)
-- [ ] Créer un fichier de style partagé (`src/hansard_pm_nlp/portfolio_style.py`) avec les constantes de couleur/police définies ici
-**Développement**
-- [ ] Charger les artefacts Phase 3/4/6 sans ré-exécuter aucun script `build_*.py`
-- [ ] Réutiliser la logique de normalisation déjà présente dans `dashboard_helpers.py`
-- [ ] Écrire `plot_style_radar()` et `plot_feature_importance_bar()` dans `src/hansard_pm_nlp/portfolio_viz.py`
-**Visualisations**
-- [ ] Radar principal (1600×1600 px, 200 dpi)
-- [ ] Bar chart des importances (1600×1000 px)
-- [ ] Matrice de confusion simplifiée (1200×1200 px)
+- [ ] Verify the real colors of `_dark()` in `app/app.py` and adjust the palette if needed
+- [ ] Simulate the PM palette under a color blindness tool (Coblis or equivalent)
+- [ ] Create a shared style file (`src/hansard_pm_nlp/portfolio_style.py`) with the color/font constants defined here
+**Development**
+- [ ] Load the Phase 3/4/6 artifacts without re-running any `build_*.py` script
+- [ ] Reuse the normalization logic already present in `dashboard_helpers.py`
+- [ ] Write `plot_style_radar()` and `plot_feature_importance_bar()` in `src/hansard_pm_nlp/portfolio_viz.py`
+**Visuals**
+- [ ] Main radar (1600x1600px, 200 dpi)
+- [ ] Importance bar chart (1600x1000px)
+- [ ] Simplified confusion matrix (1200x1200px)
 **Documentation**
-- [ ] Rédiger `portfolio/01_style_duel/README.md` selon la structure section 9
-- [ ] Rédiger `notebooks/portfolio_01_style_duel.ipynb` (narratif, sorties committées)
-**Captures**
-- [ ] Exporter toutes les images en PNG @2x (200 dpi minimum)
-- [ ] Vérifier le rendu réel dans un README GitHub (mode clair et sombre du viewer)
-**Publication GitHub**
-- [ ] Lier `portfolio/01_style_duel/` depuis le README racine
-- [ ] Vérifier que le notebook s'exécute proprement de bout en bout
-**Publication LinkedIn**
-- [ ] Recadrer les visuels aux formats LinkedIn (1080×1080 ou 1080×1350)
-- [ ] Rédiger le texte du post selon la narration section 10
+- [ ] Write `portfolio/01_style_duel/README.md` following the section 9 structure
+- [ ] Write `notebooks/portfolio_01_style_duel.ipynb` (narrated, committed outputs)
+**Exports**
+- [ ] Export all images as PNG @2x (200 dpi minimum)
+- [ ] Check the actual rendering in a GitHub README (light and dark viewer modes)
+**GitHub publication**
+- [ ] Link `portfolio/01_style_duel/` from the root README
+- [ ] Verify the notebook runs cleanly end to end
+**LinkedIn publication**
+- [ ] Crop visuals to LinkedIn formats (1080x1080 or 1080x1350)
+- [ ] Write the post text following the section 10 narration
 ---
-## 12. Bonnes pratiques — erreurs à éviter
-- **Surcharge visuelle** : ne pas ajouter d'annotations, flèches ou zones de texte dans le radar au-delà de ce qui est spécifié en section 6 — chaque élément supplémentaire dilue le message principal.
-- **Trop de couleurs** : ne jamais dépasser les 4 couleurs PM + 1 couleur d'accent dans une même image ; ne jamais mélanger la palette catégorielle PM avec la palette sémantique positive/négative.
-- **Mauvais contrastes** : ne pas utiliser `#9CA3AF` sur fond `#262730` pour du texte important (contraste insuffisant) — réserver ce gris aux fonds `#0E1117` uniquement.
-- **Polices inadaptées** : éviter les polices "manuscrites" ou "amusantes" qui contrediraient le registre sobre choisi ; ne jamais utiliser plus de 3 familles de police dans un même livrable.
-- **Graphiques difficiles à lire** : un radar à plus de 6-7 axes devient illisible — ne pas céder à la tentation d'ajouter d'autres métriques stylométriques disponibles juste parce qu'elles existent.
-- **Effets inutiles** : pas d'ombres portées, de dégradés de fond, de bordures 3D — ces effets datent visuellement une image et contredisent l'esthétique "presse économique" recherchée.
+## 12. Best practices: pitfalls to avoid
+- **Visual overload**: do not add annotations, arrows, or text boxes to the radar beyond what section 6 specifies; every extra element dilutes the main message.
+- **Too many colors**: never exceed the 4 PM colors + 1 accent color in a single image; never mix the PM categorical palette with the positive/negative semantic palette.
+- **Poor contrast**: do not use `#9CA3AF` on a `#262730` background for important text (insufficient contrast); reserve that grey for `#0E1117` backgrounds only.
+- **Unsuitable fonts**: avoid "handwritten" or "playful" fonts that would contradict the sober register chosen; never use more than 3 font families in a single deliverable.
+- **Hard to read charts**: a radar with more than 6-7 axes becomes unreadable; do not give in to the temptation of adding other available stylometric metrics just because they exist.
+- **Unnecessary effects**: no drop shadows, background gradients, or 3D borders; these effects visually date an image and contradict the "financial press" aesthetic sought.

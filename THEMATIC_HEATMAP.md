@@ -1,189 +1,189 @@
-# THEMATIC_HEATMAP.md — Spécification de conception : « La carte thermique des thèmes »
-> Ce document est une spécification complète, autosuffisante : tout ce qu'il faut pour construire le visuel et le README sans avoir à prendre de nouvelle décision de design est défini ici. La palette, la typographie et les règles d'accessibilité sont **identiques** à `STYLE_DUEL.md` pour garantir une identité graphique homogène sur l'ensemble du portfolio — elles sont reproduites intégralement ci-dessous pour que ce fichier reste utilisable seul.
+# THEMATIC_HEATMAP.md: Design specification for "The thematic heatmap"
+> This document is a complete, self-sufficient specification: everything needed to build the visual and the README without having to make a new design decision is defined here. The palette, typography, and accessibility rules are **identical** to `STYLE_DUEL.md` to guarantee a consistent visual identity across the whole portfolio; they are reproduced in full below so this file stays usable on its own.
 ---
-## 0. Cohérence avec l'identité déjà présente dans le dépôt
-- **Thème déjà fixé** : comme pour `STYLE_DUEL.md`, ce projet reprend le thème sombre déjà activé pour le dashboard (`.streamlit/config.toml: theme.base = "dark"`), en s'appuyant sur la palette sombre par défaut de Streamlit tant qu'un examen de `_dark()` dans `app/app.py` n'a pas montré de personnalisation différente.
-- **Élément déjà existant à reprendre à l'identique, pas à réinventer** : la fusion des topics T0+T1 (Ukraine/Russie, quasi-identiques) documentée dans `phase5_lda_report.md` et déjà appliquée dans le dashboard — ce visuel doit répliquer exactement cette règle, pas en discuter une nouvelle.
-- **Fenêtres de crise et dates de transition de PM** : déjà définies dans `PHASE0_SCOPING.md` (dépôt `hansard-pm-extraction`) — à charger telles quelles, jamais à redéfinir visuellement "à l'œil" sur le graphique.
-- **Convention de nommage** : `THEMATIC_HEATMAP.md` (majuscules, sans tiret) suit la même convention que `README.md`/`WRITEUP.md`/`STYLE_DUEL.md` — aucun changement nécessaire. Le notebook associé suit la même logique que pour le Projet 1 : `notebooks/portfolio_02_topic_heatmap.ipynb`.
+## 0. Consistency with the identity already present in the repo
+- **Theme already fixed**: like `STYLE_DUEL.md`, this project reuses the dark theme already activated for the dashboard (`.streamlit/config.toml: theme.base = "dark"`), relying on Streamlit's default dark palette unless a review of `_dark()` in `app/app.py` shows different customization.
+- **Existing element to reuse as is, not reinvent**: the T0+T1 topic merge (Ukraine/Russia, near identical) documented in `phase5_lda_report.md` and already applied in the dashboard; this visual must replicate that rule exactly, not debate a new one.
+- **Crisis windows and PM transition dates**: already defined in `PHASE0_SCOPING.md` (the `hansard-pm-extraction` repo), to be loaded as is, never redefined by eye on the chart.
+- **Naming convention**: `THEMATIC_HEATMAP.md` (all caps, no hyphen) follows the same convention as `README.md`/`WRITEUP.md`/`STYLE_DUEL.md`, no change needed. The associated notebook follows the same logic as Project 1: `notebooks/portfolio_02_topic_heatmap.ipynb`.
 ---
-## 1. Vision du projet
-- **Objectif** : montrer en une seule image que l'attention politique d'un Premier ministre suit fidèlement les grands chocs de son époque — sans qu'aucun nouveau modèle n'ait été entraîné pour le démontrer.
-- **Public cible** : identique à `STYLE_DUEL.md` — recruteur/manager/lecteur LinkedIn non technique.
-- **Message clé** : *"7 ans de politique britannique, résumés dans une seule carte — et on y voit littéralement Brexit, le Covid et l'Ukraine se succéder."*
-- **Storytelling** : le visuel doit fonctionner comme une frise historique doublée d'une preuve de données — le lecteur doit pouvoir "retrouver" mentalement les événements qu'il connaît déjà (Brexit, Covid, Ukraine) avant même de lire la légende, ce qui crée un effet de reconnaissance immédiat et gratifiant.
-- **Ce que le visiteur doit comprendre en moins de 10 secondes** : "chaque bande de couleur correspond à un sujet, et on voit clairement quand chaque grand événement a dominé les débats."
+## 1. Project vision
+- **Goal**: show in a single image that a Prime Minister's political attention faithfully tracks the great shocks of their era, without any new model being trained to demonstrate it.
+- **Target audience**: same as `STYLE_DUEL.md`, a non-technical recruiter/manager/LinkedIn reader.
+- **Key message**: *"7 years of British politics, summarized in a single map, and you can literally watch Brexit, Covid, and Ukraine take turns."*
+- **Storytelling**: the visual should work as a historical timeline doubled as a data proof; the reader should be able to mentally "recognize" events they already know (Brexit, Covid, Ukraine) even before reading the legend, creating an immediate, rewarding recognition effect.
+- **What the visitor should understand in under 10 seconds**: "each colored band corresponds to a topic, and you can clearly see when each major event dominated debate."
 ---
-## 2. Direction artistique
-- **Style retenu** : identique à `STYLE_DUEL.md` — "data journalism sobre", inspiré Financial Times / Our World in Data.
-- **Ambiance recherchée** : ici, l'ambiance doit en plus évoquer une **frise chronologique/infographie de presse** (type "chronologie d'une crise" que l'on voit dans les longs formats journalistiques) — c'est le seul point qui distingue l'ambiance de ce projet de celle du Projet 1, plus "fiche technique".
-- **Niveau de sobriété** : élevé, mais légèrement moins strict que le Projet 1 car ce visuel doit porter un "effet waouh" explicitement demandé — cela se traduit par un format plus grand et plus horizontal (frise), pas par plus de couleurs.
-- **Niveau d'interactivité** : nul dans le livrable portfolio (image statique) — un lien vers l'onglet "Topics" du dashboard existant couvre le besoin d'exploration interactive.
-- **Inspirations visuelles** : les "heatmaps thématiques" du *New York Times* et du *Financial Times* sur les cycles d'actualité ; les frises "Our World in Data" combinant bandes temporelles et annotations d'événements ; l'onglet Topics déjà existant du dashboard (dont ce visuel reprend la logique, en version statique et narrée).
+## 2. Art direction
+- **Style chosen**: identical to `STYLE_DUEL.md`, "sober data journalism", inspired by the Financial Times / Our World in Data.
+- **Mood sought**: here the mood must also evoke a **chronological timeline / press infographic** (the "anatomy of a crisis" timeline seen in long-form journalism); this is the one point that distinguishes this project's mood from Project 1's, which is more of a "fact sheet".
+- **Level of restraint**: high, but slightly less strict than Project 1, since this visual is explicitly meant to carry a "wow effect", expressed through a larger, more horizontal format (a timeline), not through more colors.
+- **Level of interactivity**: none in the portfolio deliverable (static image); a link to the existing dashboard's "Topics" tab covers the need for interactive exploration.
+- **Visual inspirations**: the *New York Times* and *Financial Times*' "thematic heatmaps" on news cycles; "Our World in Data" timelines combining time bands and event annotations; the dashboard's existing Topics tab (whose logic this visual reuses, in a static, narrated form).
 ---
-## 3. Palette de couleurs
-*(identique à `STYLE_DUEL.md`, reproduite ici pour l'autosuffisance du document)*
-| Couleur | Rôle | HEX | Pourquoi |
+## 3. Color palette
+*(identical to `STYLE_DUEL.md`, reproduced here for the document's self-sufficiency)*
+| Color | Role | HEX | Why |
 |---|---|---|---|
-| Fond | fond de la figure | `#0E1117` | valeur par défaut du thème sombre Streamlit déjà activé |
-| Cartes / surfaces | encarts, callout box | `#262730` | `secondaryBackgroundColor` par défaut Streamlit dark |
-| Texte principal | titres, labels | `#FAFAFA` | contraste ~18:1, au-delà du seuil WCAG AAA |
-| Texte secondaire | légendes, notes | `#9CA3AF` | contraste > 4,5:1, hiérarchise sans nuire |
-| Grille / bordures | séparations discrètes | `#3A3D46` | structure sans distraire |
-| Principale / accent | liens, titres, badges | `#22D3EE` | signature du projet, neutre politiquement |
-| Secondaire | support | `#7C89A6` | discret |
-| Positive *(réservée)* | non utilisée ici | `#4A90D9` | cf. `STYLE_DUEL.md` |
-| Négative *(réservée)* | non utilisée ici | `#D9764A` | cf. `STYLE_DUEL.md` |
-**Échelle spécifique à ce projet — poids des topics (séquentielle, pas catégorielle)** : contrairement au Projet 1, ce visuel n'encode pas des catégories (PM) mais une **magnitude continue** (poids d'un topic à un instant donné) → une palette catégorielle serait un contresens. Utiliser **Cividis**, une échelle séquentielle spécifiquement conçue et validée pour rester lisible en cas de daltonisme (contrairement à Viridis, optimisée sur la luminance perçue de façon identique pour les trois formes courantes de daltonisme). Aller de `#00204D` (poids faible, presque fondu dans le fond `#0E1117`) à `#FFEA46` (poids fort, jaune vif — attire naturellement l'œil vers les pics thématiques).
-**Fenêtres de crise (bandes de superposition)** : `#262730` à 40 % d'opacité — volontairement neutre (ni positive ni négative), car une fenêtre de crise n'est pas en soi "bonne" ou "mauvaise", juste un repère temporel.
-**Lignes de transition de PM** : pointillé vertical `#7C89A6`, 1 pt.
+| Background | figure background | `#0E1117` | default value of the already-activated Streamlit dark theme |
+| Cards / surfaces | callout boxes | `#262730` | Streamlit's default dark `secondaryBackgroundColor` |
+| Primary text | titles, labels | `#FAFAFA` | ~18:1 contrast, above the WCAG AAA threshold |
+| Secondary text | captions, notes | `#9CA3AF` | contrast > 4.5:1, adds hierarchy without hurting readability |
+| Grid / borders | discreet separators | `#3A3D46` | structure without distraction |
+| Primary / accent | links, titles, badges | `#22D3EE` | the project's signature color, politically neutral |
+| Secondary | support | `#7C89A6` | discreet |
+| Positive *(reserved)* | unused here | `#4A90D9` | see `STYLE_DUEL.md` |
+| Negative *(reserved)* | unused here | `#D9764A` | see `STYLE_DUEL.md` |
+**Scale specific to this project, topic weight (sequential, not categorical)**: unlike Project 1, this visual does not encode categories (PMs) but a **continuous magnitude** (a topic's weight at a given time), so a categorical palette would be the wrong choice. Use **Cividis**, a sequential scale specifically designed and validated to stay readable for color blindness (unlike Viridis, which is optimized for perceived luminance identically across the 3 common forms of color blindness). Range from `#00204D` (low weight, nearly blending into the `#0E1117` background) to `#FFEA46` (high weight, bright yellow, naturally drawing the eye to thematic peaks).
+**Crisis windows (overlay bands)**: `#262730` at 40% opacity, deliberately neutral (neither positive nor negative), since a crisis window is not inherently "good" or "bad", just a time marker.
+**PM transition lines**: vertical dotted line, `#7C89A6`, 1pt.
 ---
-## 4. Typographie
-*(identique à `STYLE_DUEL.md`)*
-| Usage | Police | Poids | Où l'utiliser |
+## 4. Typography
+*(identical to `STYLE_DUEL.md`)*
+| Usage | Font | Weight | Where to use it |
 |---|---|---|---|
-| Titre principal | **Lora** | 700 | titre de la heatmap |
-| Sous-titres | **Inter** | 600 | légende d'axe, labels des fenêtres de crise |
-| Texte courant | **Inter** | 400 | labels de topics, notes de source |
-| Chiffres | **IBM Plex Mono** | 500 | valeurs de la colorbar si affichées |
-Même avertissement que dans `STYLE_DUEL.md` : ces polices ne s'appliquent qu'aux images exportées (Matplotlib/Plotly) et à une éventuelle bannière/carrousel LinkedIn — jamais au corps du README GitHub, qui reste en police système GitHub.
+| Main title | **Lora** | 700 | heatmap title |
+| Subtitles | **Inter** | 600 | axis caption, crisis window labels |
+| Body text | **Inter** | 400 | topic labels, source notes |
+| Figures | **IBM Plex Mono** | 500 | colorbar values, if shown |
+Same caveat as in `STYLE_DUEL.md`: these fonts apply only to exported images (Matplotlib/Plotly) and a possible LinkedIn banner/carousel, never to the GitHub README body, which stays in GitHub's system font.
 ---
-## 5. Mise en page
-- **Disposition générale** : une image héros unique, mais **horizontale et large** (contrairement au format carré du radar), pour laisser respirer l'axe temporel sur 7 ans.
-- **Marges** : 50 px à gauche (pour les labels de topics), 40 px ailleurs.
-- **Espacement** : 20 px entre le titre et le graphique, 16 px entre le graphique et la colorbar, 12 px entre la colorbar et la note de source.
-- **Tailles de titre** : suptitle 20 pt, sous-titre 12 pt, labels de topics 10 pt (rangée de gauche), labels temporels (années) 10 pt.
-- **Hiérarchie visuelle** : titre > carte thermique > colorbar (discrète, en bas) > note de source.
-- **Largeur optimale** : export 2400×1200 px (ratio 2:1) — l'image sera affichée en pleine largeur README (~900 px), garder le format large plutôt que carré pour respecter la nature "frise temporelle" du sujet.
-- **Équilibre texte/graphique** : cette image porte davantage de "texte intégré" que le radar (labels de topics, labels de PM sur les lignes de transition) — c'est volontaire et cohérent avec l'objectif "effet waouh mais compréhensible sans légende externe".
-### Schéma ASCII — figure principale (heatmap)
+## 5. Layout
+- **Overall layout**: a single hero image, but **wide and horizontal** (unlike the radar's square format), to give the 7 year time axis room to breathe.
+- **Margins**: 50px on the left (for topic labels), 40px elsewhere.
+- **Spacing**: 20px between the title and the chart, 16px between the chart and the colorbar, 12px between the colorbar and the source note.
+- **Title sizes**: suptitle 20pt, subtitle 12pt, topic labels 10pt (left column), time labels (years) 10pt.
+- **Visual hierarchy**: title > heatmap > colorbar (discreet, at the bottom) > source note.
+- **Optimal width**: exported at 2400x1200px (2:1 ratio); the image will display at full README width (about 900px), keep the wide format rather than square to respect the "timeline" nature of the subject.
+- **Text/chart balance**: this image carries more "embedded text" than the radar (topic labels, PM labels on transition lines); this is intentional and consistent with the "wow effect but understandable without an external legend" goal.
+### ASCII diagram: main figure (heatmap)
 ```
 ┌──────────────────────────────────────────────────────────┐
-│   LA CARTE THERMIQUE DES THÈMES                            │  Lora 20pt
-│   7 ans de politique britannique, mois par mois            │  Inter 12pt
+│   THE THEMATIC HEATMAP                                     │  Lora 20pt
+│   7 years of British politics, month by month               │  Inter 12pt
 │                                                            │
 │  Brexit    ▓▓▓▓████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  │
 │  Covid-19  ░░░░░░████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░  │
 │  Ukraine   ░░░░░░░░░░░░░░░░░░████████░░░░░░░░░░░░░░░░░░░  │
-│  Économie  ░░░░░░░░░░░░████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  │
+│  Economy   ░░░░░░░░░░░░████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  │
 │  ...       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  │
 │            └──┬────┴────┬────┴────┬────┴────┬────┴────┘  │
 │              2019      2021      2023      2025           │
-│         ┊  Johnson  ┊T┊  Sunak  ┊    Starmer    ┊         │  lignes pointillées #7C89A6
-│         [bande grisée #262730 = fenêtre de crise]          │
+│         ┊  Johnson  ┊T┊  Sunak  ┊    Starmer    ┊         │  dotted lines #7C89A6
+│         [grey band #262730 = crisis window]                │
 │                                                            │
-│   faible ▮▯▯▯▯▯▯▯▯▯ élevé   (colorbar Cividis, horizontale)│
-│                     Source : Hansard API · hansard-pm-nlp  │
+│   low   ▮▯▯▯▯▯▯▯▯▯ high   (Cividis colorbar, horizontal)   │
+│                     Source: Hansard API · hansard-pm-nlp   │
 └──────────────────────────────────────────────────────────┘
-   fond #0E1117
+   background #0E1117
 ```
-### Schéma ASCII — page README
+### ASCII diagram: README page
 ```
 ┌─────────────────────────────────────────┐
-│ [Bannière 1600×400]                      │
+│ [Banner 1600x400]                        │
 ├─────────────────────────────────────────┤
-│ # La carte thermique des thèmes          │
-│ Accroche en 1 phrase                     │
+│ # The thematic heatmap                   │
+│ One-sentence hook                        │
 ├─────────────────────────────────────────┤
-│ [IMAGE HÉROS : heatmap_main.png]         │
-│ (pleine largeur, format large 2:1)       │
+│ [HERO IMAGE: heatmap_main.png]           │
+│ (full width, wide 2:1 format)            │
 ├─────────────────────────────────────────┤
-│ ## Le message en 3 phrases               │
+│ ## The message in 3 sentences            │
 ├─────────────────────────────────────────┤
-│ ## Comment ce visuel a été construit     │
-│  - lien phase5_lda_report.md             │
-│  - mention explicite LDA vs BERTopic     │
+│ ## How this visual was built             │
+│  - link to phase5_lda_report.md          │
+│  - explicit mention of LDA vs BERTopic   │
 ├─────────────────────────────────────────┤
-│ ## Ce que ça révèle (bullets)            │
+│ ## What it reveals (bullets)             │
 ├─────────────────────────────────────────┤
 │ [streamgraph_secondary.png]              │
 │ [covid_zoom_focus.png]                   │
 ├─────────────────────────────────────────┤
-│ ## Limites                               │
+│ ## Limitations                           │
 ├─────────────────────────────────────────┤
-│ ## Reproduire ce visuel                  │
+│ ## Reproducing this visual               │
 ├─────────────────────────────────────────┤
-│ Liens : dashboard live · write-up · LinkedIn │
+│ Links: live dashboard · write-up · LinkedIn │
 └─────────────────────────────────────────┘
 ```
 ---
-## 6. Design des visualisations
-### Visuel principal — Heatmap thèmes × temps
-- **Type** : heatmap, topics en lignes (13 après fusion T0+T1), mois en colonnes (continu 2019–2026).
-- **Dimensions** : figure Matplotlib/Seaborn 12×6 pouces, export 200 dpi → 2400×1200 px.
-- **Couleurs** : échelle séquentielle Cividis (section 3), fenêtres de crise en superposition `#262730`/40 %, lignes de transition PM en pointillé `#7C89A6`.
-- **Taille des polices** : titre 20 pt, labels de topics 10 pt (à gauche, alignés à droite pour un rendu propre), labels d'années 10 pt (en bas), légende des fenêtres de crise 9 pt.
-- **Style des axes** : pas d'axe Y numérique (les labels de topics remplacent les graduations) ; axe X en années seulement (pas de graduation mensuelle affichée, trop dense pour un lecteur non technique — les mois restent la granularité de calcul, pas d'affichage).
-- **Style de la grille** : aucune grille supplémentaire — les cellules de la heatmap suffisent à structurer visuellement ; fines bordures de cellule 0,3 pt dans la couleur de fond pour une séparation subtile sans créer de grille visible.
-- **Annotations** : labels courts et en langage courant pour chaque topic (repris tels quels de l'interprétation déjà rédigée dans `phase5_lda_report.md` — ne pas réinventer les intitulés), par exemple "Ukraine / Russie / sécurité" plutôt que "Topic 3" ; un label discret par fenêtre de crise directement au-dessus de la bande grisée correspondante (ex. "mini-budget") plutôt qu'une légende séparée à décoder.
-- **Légende / colorbar** : horizontale, sous le graphique, avec seulement deux graduations textuelles "faible" / "élevé" plutôt que des valeurs numériques de poids LDA (qui n'ont pas de sens intuitif pour le public cible).
-- **Animation** : aucune dans la version statique — voir section 9 pour l'option GIF en complément README.
-*Pourquoi ces choix améliorent la lecture* : remplacer les intitulés numériques de topics par leurs interprétations en langage courant transforme un artefact de modélisation abstrait en une frise historique immédiatement reconnaissable ; les graduations "faible/élevé" évitent de faire porter au lecteur la charge d'interpréter une échelle de probabilité LDA.
-### Visuel secondaire 1 — Streamgraph (un topic dans le temps)
-- **Type** : streamgraph ou simple série de "small multiples" (une ligne par topic, empilées verticalement, échelle Y masquée) — le streamgraph est recommandé s'il reste lisible avec 13 séries, sinon basculer sur les small multiples (plus sûr pour un rendu "sans décision de design supplémentaire", à choisir en fonction du rendu réel une fois testé).
-- **Dimensions** : 10×5 pouces, 200 dpi.
-- **Couleurs** : dégradé Cividis appliqué par intensité de topic, ou une couleur neutre `#7C89A6` unique si small multiples (plus lisible à 13 séries).
-- **Légende** : labels directement au bout de chaque flux/ligne plutôt qu'une légende séparée (plus lisible pour un temps de lecture court).
-### Visuel secondaire 2 — Zoom crise Covid (3 topics côte à côte)
-- **Type** : 3 mini-graphiques en ligne, un par sous-topic Covid (restrictions/tests, vaccins/écoles, NHS/enquête), fenêtre resserrée sur la période Covid uniquement.
-- **Dimensions** : 8×5 pouces, 200 dpi (3 panneaux de ~2,5×5 pouces chacun).
-- **Objectif pédagogique** : illustrer concrètement pourquoi le dépôt a choisi de **ne pas fusionner** ces 3 topics (contrairement à T0+T1) — visuel qui rend une décision méthodologique du dépôt intuitivement compréhensible.
+## 6. Visualization design
+### Main visual: topics x time heatmap
+- **Type**: heatmap, topics as rows (13 after the T0+T1 merge), months as columns (continuous, 2019-2026).
+- **Dimensions**: Matplotlib/Seaborn figure 12x6 inches, exported at 200 dpi, giving 2400x1200px.
+- **Colors**: Cividis sequential scale (section 3), crisis windows overlaid at `#262730`/40%, PM transition lines dotted `#7C89A6`.
+- **Font sizes**: title 20pt, topic labels 10pt (left, right-aligned for a clean look), year labels 10pt (bottom), crisis window legend 9pt.
+- **Axis style**: no numeric Y axis (topic labels replace the tick marks); X axis in years only (no monthly gridlines shown, too dense for a non-technical reader; months remain the computation granularity, not the display resolution).
+- **Grid style**: no additional grid; the heatmap cells alone are enough to structure the visual; thin 0.3pt cell borders in the background color for subtle separation without creating a visible grid.
+- **Annotations**: short, plain language labels for each topic (carried over unchanged from the interpretation already written in `phase5_lda_report.md`, do not reinvent the labels), for example "Ukraine / Russia / security" rather than "Topic 3"; a discreet label per crisis window directly above the corresponding grey band (e.g. "mini-budget") rather than a separate legend to decode.
+- **Legend / colorbar**: horizontal, below the chart, with only two text ticks, "low" / "high", rather than numeric LDA weight values (which would not be intuitively meaningful to the target audience).
+- **Animation**: none in the static version; see section 9 for the optional GIF as a README complement.
+*Why these choices improve readability*: replacing numeric topic labels with plain language interpretations turns an abstract modeling artifact into an immediately recognizable timeline; the "low/high" ticks avoid asking the reader to interpret an LDA probability scale.
+### Secondary visual 1: streamgraph (one topic over time)
+- **Type**: streamgraph, or simply a series of "small multiples" (one line per topic, stacked vertically, Y scale hidden); the streamgraph is recommended if it stays readable with 13 series, otherwise fall back to small multiples (a safer choice for a "no extra design decision" render, to pick based on how it actually looks once tested).
+- **Dimensions**: 10x5 inches, 200 dpi.
+- **Colors**: Cividis gradient applied by topic intensity, or a single neutral `#7C89A6` color if using small multiples (more readable at 13 series).
+- **Legend**: labels directly at the end of each stream/line rather than a separate legend (more readable given the short expected reading time).
+### Secondary visual 2: Covid crisis zoom (3 topics side by side)
+- **Type**: 3 small line charts, one per Covid sub-topic (restrictions/testing, vaccines/schools, NHS/inquiry), the window tightened to the Covid period only.
+- **Dimensions**: 8x5 inches, 200 dpi (3 panels of about 2.5x5 inches each).
+- **Pedagogical goal**: concretely illustrate why the repo chose **not to merge** these 3 topics (unlike T0+T1); a visual that makes a methodological decision from the repo intuitively understandable.
 ---
-## 7. Ergonomie
-*(mêmes règles que `STYLE_DUEL.md`, avec deux ajouts spécifiques à ce projet)*
-- Lisibilité, contraste, accessibilité, simplicité, cohérence graphique : identiques à la section 7 de `STYLE_DUEL.md`.
-- **Charge cognitive spécifique à la heatmap** : 13 lignes de topics est déjà à la limite haute de ce qu'un lecteur non technique peut absorber — ne pas ajouter de 14e ligne "pour être exhaustif", et envisager de grouper visuellement les topics apparentés (ex. les 3 topics Covid l'un sous l'autre) plutôt que de les disperser dans un ordre alphabétique arbitraire.
-- **Responsive** : le format large (2400×1200) doit rester lisible une fois réduit à la largeur d'un écran de mobile (~400 px affichés) — tester spécifiquement ce cas, car du texte à 10 pt dans une image de 2400 px peut devenir illisible une fois réduit à 400 px ; si besoin, produire une version mobile recadrée verticalement pour le carrousel LinkedIn plutôt que de réduire l'unique image large.
+## 7. Usability
+*(same rules as `STYLE_DUEL.md`, with two additions specific to this project)*
+- Readability, contrast, accessibility, simplicity, visual consistency: identical to `STYLE_DUEL.md` section 7.
+- **Cognitive load specific to the heatmap**: 13 topic rows is already at the upper limit of what a non-technical reader can absorb; do not add a 14th row "to be exhaustive", and consider visually grouping related topics (e.g. the 3 Covid topics one below the other) rather than scattering them in an arbitrary alphabetical order.
+- **Responsive**: the wide format (2400x1200) must stay readable once reduced to a mobile screen width (about 400px displayed); test this case specifically, since 10pt text in a 2400px image can become unreadable once reduced to 400px; if needed, produce a vertically cropped mobile version for the LinkedIn carousel rather than shrinking the single wide image.
 ---
-## 8. Icônes et illustrations
-*(identique à `STYLE_DUEL.md`)* — bibliothèque **Lucide**. Pictogrammes adaptés ici : une icône "flame" ou "layers" en en-tête de section (évoque la "carte thermique" sans reproduire un émoji 🔥, plus cohérent avec le registre sobre) ; icône "clock" ou "timeline" à côté du lien vers `PHASE0_SCOPING.md`. Mêmes interdits que dans `STYLE_DUEL.md` (pas d'emoji en excès, pas de clipart).
+## 8. Icons and illustrations
+*(identical to `STYLE_DUEL.md`)*: **Lucide** library. Pictograms suited here: a "flame" or "layers" icon at the top of a section (evokes the "heatmap" without reproducing a 🔥 emoji, more consistent with the sober register); a "clock" or "timeline" icon next to the link to `PHASE0_SCOPING.md`. Same restrictions as `STYLE_DUEL.md` (no excess emoji, no clipart).
 ---
-## 9. README GitHub
-**Structure recommandée pour `portfolio/02_topic_heatmap/README.md`** — identique à la structure de `STYLE_DUEL.md` (section 9), avec deux différences :
-1. **Bannière** : même format (1600×400 px) mais titre "La carte thermique des thèmes".
-2. **Section méthode** : doit explicitement mentionner que LDA a été préféré à BERTopic *à cause de la taille du corpus* (296 documents), pas par supériorité intrinsèque — point d'honnêteté déjà documenté dans `phase5_topic_comparison_report.md`, à ne pas passer sous silence même dans une version vulgarisée.
-3. **GIF (optionnel mais recommandé ici, contrairement au Projet 1)** : un GIF court (4-6 secondes, boucle, < 5 Mo) montrant l'axe temporel "balayé" de gauche à droite peut renforcer l'effet "frise qui prend vie" — à produire uniquement si le temps le permet, ce n'est pas un prérequis (cohérent avec la contrainte de simplicité de développement).
+## 9. GitHub README
+**Recommended structure for `portfolio/02_topic_heatmap/README.md`**: identical to `STYLE_DUEL.md`'s structure (section 9), with two differences:
+1. **Banner**: same format (1600x400px) but title "The thematic heatmap".
+2. **Method section**: must explicitly mention that LDA was preferred over BERTopic *because of corpus size* (296 documents), not because of intrinsic superiority, an honesty point already documented in `phase5_topic_comparison_report.md`, not to be glossed over even in a simplified version.
+3. **GIF (optional but recommended here, unlike Project 1)**: a short GIF (4-6 seconds, looping, under 5MB) showing the time axis "sweeping" left to right can reinforce the "timeline coming alive" effect; produce it only if time allows, it is not a prerequisite (consistent with the development-simplicity constraint).
 ---
-## 10. Publication LinkedIn
-- **Images à produire** : `heatmap_main.png` recadrée en 1080×1350 (portrait, la version large 2:1 ne fonctionne pas bien en post LinkedIn plein cadre) — prévoir un recadrage dédié dès la conception plutôt qu'un redimensionnement a posteriori qui écraserait les labels de topics.
-- **Format** : **carrousel de 3-4 slides** recommandé ici (contrairement au Projet 1) car le sujet se prête à une narration séquentielle : (1) la heatmap complète en teaser, (2) zoom Brexit, (3) zoom Covid, (4) zoom Ukraine — chaque slide reprend le même visuel recadré sur une période, créant un effet de "on tourne les pages d'une frise historique".
-- **Narration du post texte** : ouvrir par "7 ans, 4 Premiers ministres, une seule question : de quoi parlaient-ils vraiment ?", dérouler les 3-4 événements dans l'ordre chronologique en légende de chaque slide, terminer par le lien GitHub/dashboard.
-- **Éléments qui attirent l'œil** : le jaune vif de Cividis (`#FFEA46`) sur fond sombre crée des points de focalisation naturels sur les pics thématiques — s'assurer qu'au moins un pic jaune vif soit visible dans la vignette de preview LinkedIn (le crop automatique de LinkedIn tronque parfois les images, à vérifier avant publication).
+## 10. LinkedIn publication
+- **Images to produce**: `heatmap_main.png` cropped to 1080x1350 (portrait; the wide 2:1 version does not work well in a full-frame LinkedIn post), a dedicated crop should be planned from the design stage rather than an after-the-fact resize that would crush the topic labels.
+- **Format**: a **3 to 4 slide carousel** is recommended here (unlike Project 1) since the subject lends itself to sequential storytelling: (1) the full heatmap as a teaser, (2) Brexit zoom, (3) Covid zoom, (4) Ukraine zoom; each slide reuses the same visual cropped to a period, creating a "turning the pages of a historical timeline" effect.
+- **Post text narration**: open with "7 years, 4 Prime Ministers, one question: what were they really talking about?", unfold the 3-4 events in chronological order as each slide's caption, end with the GitHub/dashboard link.
+- **Eye-catching elements**: Cividis's bright yellow (`#FFEA46`) on a dark background creates natural focal points on thematic peaks; make sure at least one bright yellow peak is visible in the LinkedIn preview thumbnail (LinkedIn's automatic crop sometimes truncates images, check before publishing).
 ---
-## 11. Checklist de réalisation
+## 11. Build checklist
 **Design**
-- [ ] Vérifier les couleurs réelles de `_dark()` dans `app/app.py`
-- [ ] Tester l'échelle Cividis sous un simulateur de daltonisme
-- [ ] Réutiliser le fichier de style partagé `src/hansard_pm_nlp/portfolio_style.py` créé pour le Projet 1
-**Développement**
-- [ ] Charger la matrice document × topic déjà écrite dans `data/processed/` sans ré-exécuter `build_lda_topics.py`
-- [ ] Reprendre telle quelle la règle de fusion T0+T1 déjà implémentée dans `dashboard_helpers.py`
-- [ ] Charger les fenêtres de crise et dates de transition depuis `PHASE0_SCOPING.md` (pas de ressaisie manuelle)
-- [ ] Agréger les poids par mois (moyenne pondérée)
-- [ ] Écrire `plot_topic_heatmap()`, `plot_topic_streamgraph()`, `plot_crisis_zoom()` dans `src/hansard_pm_nlp/portfolio_viz.py`
-**Visualisations**
-- [ ] Heatmap principale (2400×1200 px, 200 dpi)
-- [ ] Streamgraph ou small multiples secondaire (2000×1000 px)
-- [ ] Zoom Covid 3 panneaux (1600×1000 px)
+- [ ] Verify the real colors of `_dark()` in `app/app.py`
+- [ ] Test the Cividis scale under a color blindness simulator
+- [ ] Reuse the shared style file `src/hansard_pm_nlp/portfolio_style.py` created for Project 1
+**Development**
+- [ ] Load the document x topic matrix already written in `data/processed/` without re-running `build_lda_topics.py`
+- [ ] Reuse the T0+T1 merge rule already implemented in `dashboard_helpers.py` as is
+- [ ] Load crisis windows and transition dates from `PHASE0_SCOPING.md` (no manual re-entry)
+- [ ] Aggregate weights by month (weighted average)
+- [ ] Write `plot_topic_heatmap()`, `plot_topic_streamgraph()`, `plot_crisis_zoom()` in `src/hansard_pm_nlp/portfolio_viz.py`
+**Visuals**
+- [ ] Main heatmap (2400x1200px, 200 dpi)
+- [ ] Secondary streamgraph or small multiples (2000x1000px)
+- [ ] Covid zoom, 3 panels (1600x1000px)
 **Documentation**
-- [ ] Rédiger `portfolio/02_topic_heatmap/README.md` selon la structure section 9
-- [ ] Mentionner explicitement le choix LDA vs BERTopic et sa justification
-**Captures**
-- [ ] Exporter toutes les images en PNG @2x
-- [ ] Vérifier la lisibilité des labels de topics une fois l'image réduite à la largeur mobile
-**Publication GitHub**
-- [ ] Lier `portfolio/02_topic_heatmap/` depuis le README racine
-- [ ] (Optionnel) Produire le GIF de balayage temporel
-**Publication LinkedIn**
-- [ ] Recadrer en 1080×1350 pour chaque slide du carrousel
-- [ ] Vérifier que la vignette de preview contient un pic jaune vif visible
-- [ ] Rédiger le texte du post selon la narration section 10
+- [ ] Write `portfolio/02_topic_heatmap/README.md` following the section 9 structure
+- [ ] Explicitly mention the LDA vs BERTopic choice and its justification
+**Exports**
+- [ ] Export all images as PNG @2x
+- [ ] Check topic label readability once the image is reduced to mobile width
+**GitHub publication**
+- [ ] Link `portfolio/02_topic_heatmap/` from the root README
+- [ ] (Optional) Produce the time-sweep GIF
+**LinkedIn publication**
+- [ ] Crop to 1080x1350 for each carousel slide
+- [ ] Verify the preview thumbnail contains a visible bright yellow peak
+- [ ] Write the post text following the section 10 narration
 ---
-## 12. Bonnes pratiques — erreurs à éviter
-*(mêmes principes que `STYLE_DUEL.md`, complétés pour ce projet)*
-- **Surcharge visuelle** : ne pas afficher les 14 topics d'origine sans fusion — respecter la fusion T0+T1 déjà validée, qui existe précisément pour éviter cette surcharge.
-- **Trop de couleurs** : une seule échelle de couleur (Cividis) pour toute la heatmap — ne jamais colorer les lignes de topics individuellement en plus de la couleur de cellule, cela créerait un double encodage confus.
-- **Mauvais contrastes** : le jaune vif de Cividis sur fond `#0E1117` est le point le plus contrasté du visuel — vérifier qu'aucun texte de label ne se retrouve superposé directement sur une cellule jaune vif sans halo/contour de lisibilité.
-- **Polices inadaptées** : ne pas réduire les labels de topics en dessous de 9 pt pour "faire tenir" les 13 lignes — préférer raccourcir les libellés plutôt que réduire la police sous le seuil de lisibilité.
-- **Graphiques difficiles à lire** : éviter un axe X avec une graduation mensuelle affichée (84 graduations sur 7 ans) — s'en tenir aux années comme repères visuels, cohérent avec la section 6.
-- **Effets inutiles** : pas d'effet de "profondeur" ou d'ombre portée sur les cellules de heatmap ; le GIF de balayage temporel (section 9) reste optionnel et ne doit jamais devenir une animation complexe (fondu, zoom, particules) qui détournerait l'attention du message de données.
+## 12. Best practices: pitfalls to avoid
+*(same principles as `STYLE_DUEL.md`, extended for this project)*
+- **Visual overload**: do not show the original 14 topics without merging; respect the already validated T0+T1 merge, which exists precisely to avoid this overload.
+- **Too many colors**: a single color scale (Cividis) for the whole heatmap; never color individual topic rows on top of the cell color, that would create confusing double encoding.
+- **Poor contrast**: Cividis's bright yellow on a `#0E1117` background is the visual's highest-contrast point; verify that no label text ever sits directly on a bright yellow cell without a readability halo/outline.
+- **Unsuitable fonts**: do not shrink topic labels below 9pt to "fit" the 13 rows; shorten the labels instead of reducing the font below the readability threshold.
+- **Hard to read charts**: avoid an X axis with monthly gridlines shown (84 gridlines over 7 years); stick to years as visual markers, consistent with section 6.
+- **Unnecessary effects**: no "depth" effect or drop shadow on heatmap cells; the time-sweep GIF (section 9) stays optional and must never become a complex animation (fade, zoom, particles) that would distract from the data message.

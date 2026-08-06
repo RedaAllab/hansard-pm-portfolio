@@ -1,82 +1,82 @@
 <p align="center">
-  <img src="assets/banner.png" alt="La carte thermique des thèmes" width="100%">
+  <img src="assets/banner.png" alt="The thematic heatmap" width="100%">
 </p>
 
-# La carte thermique des thèmes
+# The thematic heatmap
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-22D3EE)](https://www.python.org/)
 [![Dashboard live](https://img.shields.io/badge/dashboard-live-22D3EE)](https://hansard-pm-nlp-nhenez39aujxgtejnyjvrg.streamlit.app)
 [![hansard-pm-nlp](https://img.shields.io/badge/data-hansard--pm--nlp-7C89A6)](https://github.com/RedaAllab/hansard-pm-nlp)
 
-**7 ans de politique britannique, résumés dans une seule carte — et on y voit littéralement Brexit, le Covid et l'Ukraine se succéder.**
+**7 years of British politics, summarized in a single map, and you can literally watch Brexit, Covid and Ukraine take turns.**
 
-## Sommaire
+## Contents
 
-- [Le message en 3 phrases](#le-message-en-3-phrases)
-- [Comment ce visuel a été construit](#comment-ce-visuel-a-été-construit)
-- [Ce que ça révèle](#ce-que-ça-révèle)
-- [Visuels secondaires](#visuels-secondaires)
-- [Limites](#limites)
-- [Reproduire ce visuel](#reproduire-ce-visuel)
-- [Liens](#liens)
+- [The message in 3 sentences](#the-message-in-3-sentences)
+- [How this visual was built](#how-this-visual-was-built)
+- [What it reveals](#what-it-reveals)
+- [Secondary visuals](#secondary-visuals)
+- [Limitations](#limitations)
+- [Reproducing this visual](#reproducing-this-visual)
+- [Links](#links)
 
 <p align="center">
-  <img src="assets/heatmap_main.png" alt="Carte thermique des 13 thèmes par mois, 2019-2026" width="100%">
+  <img src="assets/heatmap_main.png" alt="Heatmap of 13 topics by month, 2019-2026" width="100%">
 </p>
 
-## Le message en 3 phrases
+## The message in 3 sentences
 
-L'attention parlementaire d'un Premier ministre britannique suit fidèlement les chocs de son époque — pas besoin d'un nouveau modèle pour le voir, seulement de mettre en image ce qu'un modèle de topics déjà entraîné (LDA, Phase 5) a déjà capturé. Chaque bande de couleur est un thème ; plus elle est jaune vif, plus il a dominé les débats ce mois-là. En sept ans, quatre séquences ressortent sans qu'il faille les expliquer : l'accord nord-irlandais post-Brexit en janvier 2020, le Covid-19 sur près de deux ans, le retrait de Kaboul en quelques semaines à l'été 2021, puis l'invasion de l'Ukraine à partir de février 2022.
+A UK Prime Minister's parliamentary attention faithfully tracks the shocks of their time. No new model is needed to see it, only a picture of what an already-trained topic model (LDA, Phase 5) had already captured. Each colored band is a topic; the brighter the yellow, the more it dominated debate that month. Across seven years, four sequences stand out without needing an explanation: the post-Brexit Northern Ireland deal in January 2020, Covid-19 over nearly two years, the withdrawal from Kabul in a matter of weeks in summer 2021, then the invasion of Ukraine from February 2022 onward.
 
-## Comment ce visuel a été construit
+## How this visual was built
 
-- **Aucun nouveau modèle entraîné** : la matrice document × thème vient telle quelle de `lda_topics.parquet` (Phase 5, [`hansard-pm-nlp`](https://github.com/RedaAllab/hansard-pm-nlp)) — 296 documents (PM × séance), K=14 thèmes, jamais restreinte aux 3 PM du classifieur (contrairement à Phase 6), donc Liz Truss y figure.
-- **LDA plutôt que BERTopic — par contrainte, pas par supériorité** : [`phase5_topic_comparison_report.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/data/processed/phase5_topic_comparison_report.md) documente que BERTopic, sur un corpus de seulement 296 documents, regroupe 61 % d'entre eux dans un unique thème fourre-tout. LDA a été retenu pour cette taille de corpus précise, pas parce qu'il serait intrinsèquement meilleur — BERTopic est conçu pour des corpus plusieurs ordres de grandeur plus grands.
-- **La fusion Ukraine/Russie (T0+T1) est reprise à l'identique**, pas redécidée : [`phase5_lda_report.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/data/processed/phase5_lda_report.md) documente ces deux thèmes comme quasi-identiques à tous les K testés — sommés en un seul avant tout affichage.
-- **Les 13 libellés en langage courant sont un travail éditorial de ce projet**, pas une reprise : ni le rapport Phase 5 ni le dashboard live n'en proposent — tous deux n'affichent que des listes de mots-clés bruts ou des labels algorithmiques (« T2: hs, project, rail »). Les libellés utilisés ici (ex. « Brexit et l'accord nord-irlandais ») ont été écrits à partir de ces mêmes listes de mots-clés, traçabilité conservée dans `src/hansard_pm_portfolio/data_access.py`.
-- **Fenêtres de crise et dates de mandat** viennent de `PHASE0_SCOPING.md` ([`hansard-pm-extraction`](https://github.com/RedaAllab/hansard-pm-extraction)), jamais redéfinies à l'œil sur le graphique.
+- **No new model trained**: the document x topic matrix comes as is from `lda_topics.parquet` (Phase 5, [`hansard-pm-nlp`](https://github.com/RedaAllab/hansard-pm-nlp)): 296 documents (PM x sitting), K=14 topics, never restricted to the classifier's 3 PMs (unlike Phase 6), so Liz Truss is included.
+- **LDA over BERTopic, by constraint, not by superiority**: [`phase5_topic_comparison_report.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/data/processed/phase5_topic_comparison_report.md) documents that BERTopic, on a corpus of only 296 documents, groups 61% of them into a single catch-all topic. LDA was chosen for this specific corpus size, not because it is intrinsically better; BERTopic is designed for corpora several orders of magnitude larger.
+- **The Ukraine/Russia merge (T0+T1) is carried over unchanged**, not redecided: [`phase5_lda_report.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/data/processed/phase5_lda_report.md) documents these two topics as near identical at every K tested, summed into one before any display.
+- **The 13 plain language labels are editorial work for this project**, not a reuse: neither the Phase 5 report nor the live dashboard offer any, both only show raw keyword lists or algorithmic labels ("T2: hs, project, rail"). The labels used here (e.g. "Brexit and the Northern Ireland deal") were written from those same keyword lists, with traceability kept in `src/hansard_pm_portfolio/data_access.py`.
+- **Crisis windows and tenure dates** come from `PHASE0_SCOPING.md` ([`hansard-pm-extraction`](https://github.com/RedaAllab/hansard-pm-extraction)), never eyeballed on the chart.
 
-## Ce que ça révèle
+## What it reveals
 
-- **L'accord commercial post-Brexit domine dès le premier mois** (janvier 2020) — le pic le plus net de toute la carte, avant même que Covid n'apparaisse.
-- **Le Covid-19 occupe near-continûment 16 mois**, mais sous 3 angles distincts (restrictions/tests, vaccins/écoles, personnel NHS/enquête publique) qui montent et descendent à des moments différents — voir le zoom ci-dessous.
-- **L'Afghanistan est le pic le plus brutal de la carte** : quasiment invisible avant et après, dominant sur 2-3 mois pile au moment du retrait de Kaboul (été 2021).
-- **« Budget et politique intérieure » devient le thème le plus constamment présent à partir de fin 2022** — sous Sunak puis Starmer, l'attention se déplace nettement du choc externe vers la gestion intérieure.
-- **La « crise de leadership travailliste » (mai-juillet 2026) est la moins reconnaissable des 4 fenêtres de crise** — contrairement à Brexit/Covid/Ukraine, c'est un événement récent et propre au corpus (transition Starmer → Burnham), pas un choc mondial déjà familier au lecteur.
+- **The post-Brexit trade deal dominates from the very first month** (January 2020), the sharpest peak on the whole map, before Covid even appears.
+- **Covid-19 occupies close to 16 continuous months**, but under 3 distinct angles (restrictions/testing, vaccines/schools, NHS staff/inquiry) that rise and fall at different times, see the zoom below.
+- **Afghanistan is the sharpest spike on the map**: nearly invisible before and after, dominant for 2-3 months right at the withdrawal from Kabul (summer 2021).
+- **"Budget and domestic policy" becomes the most consistently present topic from late 2022 onward**: under Sunak and then Starmer, attention shifts noticeably from external shock to domestic management.
+- **The "Labour leadership crisis" (May-July 2026) is the least recognizable of the 4 crisis windows**: unlike Brexit, Covid or Ukraine, it is a recent event specific to this corpus (the Starmer to Burnham transition), not a global shock the reader already knows.
 
-## Visuels secondaires
+## Secondary visuals
 
 <table>
 <tr>
-<td width="60%"><img src="assets/small_multiples.png" alt="Les 13 thèmes séparément, un panneau par thème" width="100%"></td>
-<td width="40%"><img src="assets/covid_zoom.png" alt="Zoom sur les 3 thèmes Covid-19" width="100%"></td>
+<td width="60%"><img src="assets/small_multiples.png" alt="The 13 topics separately, one panel per topic" width="100%"></td>
+<td width="40%"><img src="assets/covid_zoom.png" alt="Zoom on the 3 Covid-19 topics" width="100%"></td>
 </tr>
 </table>
 
-Le premier éclate les 13 thèmes en petits panneaux individuels plutôt qu'une seule légende à 13 couleurs — le dashboard live a déjà testé les deux formats pour son propre onglet Topics et documenté pourquoi les small multiples l'emportent à cette échelle ; repris à l'identique plutôt que retesté. Le second zoome sur les 3 thèmes Covid pour montrer concrètement pourquoi ils n'ont jamais été fusionnés (contrairement à Ukraine/Russie) : ce sont 3 sous-phases distinctes de la même crise, pas un doublon.
+The first breaks the 13 topics into small individual panels rather than a single 13 color legend. The live dashboard already tested both formats for its own Topics tab and documented why small multiples win at this scale; reused as is rather than retested. The second zooms in on the 3 Covid topics to show concretely why they were never merged (unlike Ukraine/Russia): they are 3 distinct sub-phases of the same crisis, not a duplicate.
 
-## Limites
+## Limitations
 
-- **Liz Truss (5 documents, 49 jours)** : les colonnes de septembre-octobre 2022 reposent sur un échantillon très réduit — à lire comme un signal bruité, pas comme une politique thématique établie.
-- **Les libellés de thèmes sont une interprétation, pas une vérité du modèle** : LDA ne produit que des distributions de mots ; les phrases en langage courant utilisées ici sont une lecture humaine de ces mots-clés, pas une sortie du modèle lui-même — un autre lecteur des mêmes mots-clés aurait pu choisir d'autres formulations.
-- **Le duplicata Ukraine/Russie (T0+T1) est un vrai signal du corpus, pas un artefact à corriger** — documenté dans `phase5_lda_report.md` comme reflétant des sous-périodes distinctes du conflit (invasion 2022, aide militaire continue, sommets OTAN) avec un vocabulaire différent à chaque fois, pas une instabilité du modèle.
-- **LDA sur 296 documents reste un corpus modeste** : la comparaison avec BERTopic (voir ci-dessus) montre que le choix de méthode a été contraint par la taille du corpus, pas validé comme optimal dans l'absolu.
-- **Andy Burnham hors périmètre** : devenu Premier ministre le 2026-07-20, après la dernière séance du corpus à cette date d'extraction — absent de cette carte par construction, pas par filtrage a posteriori.
+- **Liz Truss (5 documents, 49 days)**: the September to October 2022 columns rest on a very small sample, to be read as a noisy signal, not an established thematic policy.
+- **Topic labels are an interpretation, not a model truth**: LDA only produces word distributions; the plain language phrases used here are a human reading of those keywords, not an output of the model itself, another reader of the same keywords could have chosen different wording.
+- **The Ukraine/Russia duplicate (T0+T1) is a real signal in the corpus, not an artifact to fix**: documented in `phase5_lda_report.md` as reflecting distinct sub-periods of the conflict (the 2022 invasion, ongoing military aid, NATO summits) with different vocabulary each time, not model instability.
+- **LDA on 296 documents remains a modest corpus**: the comparison with BERTopic (see above) shows the choice of method was constrained by corpus size, not validated as optimal in absolute terms.
+- **Andy Burnham is out of scope**: he became Prime Minister on 2026-07-20, after this corpus's last sitting at this extraction date, absent from this map by construction, not by after-the-fact filtering.
 
-## Reproduire ce visuel
+## Reproducing this visual
 
-Depuis la racine de ce dépôt :
+From this repo's root:
 
 ```bash
 jupyter nbconvert --to notebook --execute --inplace notebooks/02_topic_heatmap.ipynb
 ```
 
-Prérequis : `hansard-pm-nlp` cloné en dossier frère (`../hansard-pm-nlp`) — voir le [README racine](../../README.md) de ce dépôt pour le détail.
+Prerequisite: `hansard-pm-nlp` cloned as a sibling directory (`../hansard-pm-nlp`), see this repo's [root README](../../README.md) for details.
 
-## Liens
+## Links
 
-- [Dashboard interactif](https://hansard-pm-nlp-nhenez39aujxgtejnyjvrg.streamlit.app) — l'onglet "Topics" reproduit cette carte en version filtrable, avec les mots-clés bruts de chaque thème
-- [`hansard-pm-nlp`](https://github.com/RedaAllab/hansard-pm-nlp) — dépôt source des données et du modèle
-- [`phase5_lda_report.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/data/processed/phase5_lda_report.md) — rapport technique complet du modèle LDA
-- [`phase5_topic_comparison_report.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/data/processed/phase5_topic_comparison_report.md) — comparaison LDA vs BERTopic
-- [`WRITEUP.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/WRITEUP.md) — write-up complet du projet d'analyse
+- [Interactive dashboard](https://hansard-pm-nlp-nhenez39aujxgtejnyjvrg.streamlit.app): the "Topics" tab reproduces this map in a filterable form, with each topic's raw keywords
+- [`hansard-pm-nlp`](https://github.com/RedaAllab/hansard-pm-nlp): source repo for the data and model
+- [`phase5_lda_report.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/data/processed/phase5_lda_report.md): full technical report of the LDA model
+- [`phase5_topic_comparison_report.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/data/processed/phase5_topic_comparison_report.md): LDA vs BERTopic comparison
+- [`WRITEUP.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/WRITEUP.md): full write-up of the analysis project

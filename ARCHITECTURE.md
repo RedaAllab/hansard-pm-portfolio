@@ -1,68 +1,68 @@
-# Choix d'architecture
+# Architecture decisions
 
-Ce document justifie les décisions structurelles de ce dépôt qui s'écartent de, ou précisent, `STYLE_DUEL.md`. Il est volontairement court — un journal de décisions, pas une deuxième spécification.
+This document justifies the structural decisions in this repo that deviate from, or make more specific, `STYLE_DUEL.md`. It is deliberately short: a decision log, not a second specification.
 
-## 1. Un dépôt séparé, pas un sous-dossier de `hansard-pm-nlp`
+## 1. A separate repo, not a subfolder of `hansard-pm-nlp`
 
-`STYLE_DUEL.md` suppose implicitement (`src/hansard_pm_nlp/portfolio_style.py`, `portfolio/01_style_duel/`) que ce projet vit **dans** `hansard-pm-nlp`. Sur demande explicite, il vit ici, dans un dépôt séparé (`hansard-pm-portfolio`), qui accueillera aussi le projet 02 (`THEMATIC_HEATMAP.md`) plus tard — d'où `portfolio/01_style_duel/` et `portfolio/02_topic_heatmap/` comme sous-dossiers de *ce* dépôt, pas de `hansard-pm-nlp`.
+`STYLE_DUEL.md` implicitly assumes (`src/hansard_pm_nlp/portfolio_style.py`, `portfolio/01_style_duel/`) that this project lives **inside** `hansard-pm-nlp`. On explicit request, it lives here instead, in a separate repo (`hansard-pm-portfolio`), which will also host project 02 (`THEMATIC_HEATMAP.md`) later. Hence `portfolio/01_style_duel/` and `portfolio/02_topic_heatmap/` are subfolders of *this* repo, not of `hansard-pm-nlp`.
 
-Conséquence directe : ce dépôt ne peut pas importer `hansard_pm_nlp` comme un module Python du même arbre de code — il lit ses artefacts comme des données externes. Voir §3.
+Direct consequence: this repo cannot import `hansard_pm_nlp` as a Python module from the same code tree, it reads its artifacts as external data instead. See section 3.
 
-## 2. `hansard_pm_portfolio`, pas `hansard_pm_nlp`
+## 2. `hansard_pm_portfolio`, not `hansard_pm_nlp`
 
-`STYLE_DUEL.md` nomme les fichiers `src/hansard_pm_nlp/portfolio_style.py` et `portfolio_viz.py` — cohérent avec un sous-dossier de `hansard-pm-nlp`, mais un dépôt séparé avec un package du même nom (`hansard_pm_nlp`) collisionnerait dans tout environnement où les deux sont installés (deux distributions différentes revendiquant le même nom d'import). Le package s'appelle donc `hansard_pm_portfolio`. Le préfixe `portfolio_` des noms de fichiers de la spec devient redondant une fois que le package entier *est* le portfolio — `portfolio_style.py` → `style.py`, `portfolio_viz.py` → `viz/style_duel.py` (voir §6). Même renommage pour le notebook : `notebooks/portfolio_01_style_duel.ipynb` → `notebooks/01_style_duel.ipynb`.
+`STYLE_DUEL.md` names the files `src/hansard_pm_nlp/portfolio_style.py` and `portfolio_viz.py`, consistent with a subfolder of `hansard-pm-nlp`, but a separate repo with a package of the same name (`hansard_pm_nlp`) would collide in any environment where both are installed (two different distributions claiming the same import name). The package is therefore called `hansard_pm_portfolio`. The spec's `portfolio_` file name prefix becomes redundant once the whole package *is* the portfolio: `portfolio_style.py` becomes `style.py`, `portfolio_viz.py` becomes `viz/style_duel.py` (see section 6). Same renaming for the notebook: `notebooks/portfolio_01_style_duel.ipynb` becomes `notebooks/01_style_duel.ipynb`.
 
-## 3. Dépendance légère, lecture seule des artefacts déjà exportés
+## 3. Lightweight dependency, read-only access to already-exported artifacts
 
-`hansard-pm-nlp` a déjà résolu ce problème pour son propre dashboard : `requirements-app.txt` n'installe ni torch, ni transformers, ni spacy, ni bertopic — seulement ce qu'il faut pour lire des fichiers déjà calculés (`pandas`, `pyarrow`, `plotly`, `gensim`). Ce dépôt suit exactement le même principe :
+`hansard-pm-nlp` already solved this problem for its own dashboard: `requirements-app.txt` installs neither torch, transformers, spacy, nor bertopic, only what is needed to read files that are already computed (`pandas`, `pyarrow`, `plotly`, `gensim`). This repo follows the exact same principle:
 
-- **Aucune dépendance sur le package `hansard_pm_nlp`** — l'installer entraînerait tout `pyproject.toml` de `hansard-pm-nlp` (torch, transformers, spacy, bertopic, gensim), inutile ici puisque tout le calcul lourd a déjà eu lieu.
-- **Deux fonctions portées, pas importées** : `normalize_radar()` (10 lignes de pandas pur) et le tokenizer regex de `lexical.py` (3 lignes) sont recopiées dans `data_access.py` avec une note d'attribution, plutôt que de dépendre du package complet pour ~15 lignes.
-- **Emplacement des données** : `data_access.hansard_pm_nlp_dir()` résout un dépôt frère (`../hansard-pm-nlp`, comme sur cette machine) ou la variable d'environnement `HANSARD_PM_NLP_DIR`.
+- **No dependency on the `hansard_pm_nlp` package**: installing it would pull in all of `hansard-pm-nlp`'s `pyproject.toml` (torch, transformers, spacy, bertopic, gensim), unnecessary here since all the heavy computation has already happened.
+- **Two functions ported, not imported**: `normalize_radar()` (10 lines of pure pandas) and `lexical.py`'s regex tokenizer (3 lines) are copied into `data_access.py` with an attribution note, rather than depending on the full package for about 15 lines.
+- **Data location**: `data_access.hansard_pm_nlp_dir()` resolves a sibling repo (`../hansard-pm-nlp`, as on this machine) or the `HANSARD_PM_NLP_DIR` environment variable.
 
-## 4. DuckDB pour lire les fichiers Parquet, pas `pandas.read_parquet`
+## 4. DuckDB to read Parquet files, not `pandas.read_parquet`
 
-Les fichiers Parquet de `hansard-pm-nlp` (écrits avec `parquet-cpp-arrow` 24.x) déclenchent `OSError: Repetition level histogram size mismatch` avec `pandas.read_parquet` sous pyarrow 19 — une incompatibilité connue entre versions dans l'encodage des statistiques de colonne. DuckDB lit les mêmes fichiers sans problème et retourne un `DataFrame` pandas via `.df()`. `data_access.read_parquet()` centralise ce contournement plutôt que de forcer une mise à niveau de pyarrow, dont l'effet de bord sur le reste de l'environnement est moins prévisible.
+`hansard-pm-nlp`'s Parquet files (written with `parquet-cpp-arrow` 24.x) trigger `OSError: Repetition level histogram size mismatch` with `pandas.read_parquet` under pyarrow 19, a known cross-version incompatibility in how column-chunk statistics are encoded. DuckDB reads the same files without issue and returns a pandas `DataFrame` via `.df()`. `data_access.read_parquet()` centralizes this workaround rather than forcing a pyarrow upgrade, whose side effects on the rest of the environment are less predictable.
 
-## 5. Le radar : 5 traits repris tels quels, 1 recalculé, 1 substitué
+## 5. The radar: 5 traits carried over unchanged, 1 recomputed, 1 substituted
 
-`STYLE_DUEL.md` §6 propose 6 axes : MTLD, Flesch-Kincaid, `hedge_rate`, `net_certainty`, `pos_INTJ`, fréquence de « not ». En pratique :
+`STYLE_DUEL.md` section 6 proposes 6 axes: MTLD, Flesch-Kincaid, `hedge_rate`, `net_certainty`, `pos_INTJ`, frequency of "not". In practice:
 
-- **MTLD, Flesch-Kincaid, `hedge_rate`, `net_certainty`, `mean_words_per_sentence`** viennent tels quels de `eda_summary.csv` / `affect_summary.csv` (Phases 3-4), disponibles pour les 4 PM sans recalcul — les mêmes colonnes que l'onglet "Stylometric profile by PM" du dashboard live.
-- **Fréquence de « not »** est recalculée ici (whole-corpus par PM, même tokenizer que `lexical.py`) car Phase 6 ne l'a exportée que pour 3 PM (voir §7) — un calcul trivial, sans dépendance lourde, donc gardé.
-- **`pos_INTJ` → `mean_words_per_sentence`** : `pos_INTJ` nécessite spaCy (POS-tagging), et Phase 6 ne l'a calculé que pour les 3 PM du classifieur — Liz Truss en est exclue *avant* le calcul des traits stylométriques, pas seulement avant l'entraînement. Ajouter spaCy à ce dépôt pour une seule valeur manquante contredirait §3. `mean_words_per_sentence` le remplace : disponible pour les 4 PM, et 5ᵉ trait le plus discriminant du modèle le plus précis (HistGradientBoosting) — la substitution garde un ancrage "validé par le classifieur" plutôt que de le perdre silencieusement.
+- **MTLD, Flesch-Kincaid, `hedge_rate`, `net_certainty`, `mean_words_per_sentence`** come unchanged from `eda_summary.csv` / `affect_summary.csv` (Phases 3-4), available for all 4 PMs with no recomputation, the same columns the live dashboard's "Stylometric profile by PM" tab uses.
+- **Frequency of "not"** is recomputed here (whole corpus per PM, same tokenizer as `lexical.py`) because Phase 6 only exported it for 3 PMs (see section 7): a trivial computation, no heavy dependency, so it was kept.
+- **`pos_INTJ` replaced with `mean_words_per_sentence`**: `pos_INTJ` needs spaCy (POS tagging), and Phase 6 only computed it for the classifier's 3 PMs. Liz Truss is excluded *before* the stylometric traits are even computed, not only before training. Adding spaCy to this repo for one missing value would contradict section 3. `mean_words_per_sentence` replaces it: available for all 4 PMs, and the 5th most discriminant trait of the more accurate model (HistGradientBoosting), so the substitution keeps a "classifier-validated" anchor rather than silently losing it.
 
-Documenté aussi dans le README du projet (section "Comment ce visuel a été construit" et "Limites"), pas seulement ici.
+Also documented in the project's README (the "How this visual was built" and "Limitations" sections), not only here.
 
-## 6. Un fichier de viz par projet, plus un `viz/common.py` partagé
+## 6. One viz file per project, plus a shared `viz/common.py`
 
-`STYLE_DUEL.md` §11 suggère un seul `portfolio_viz.py` pour `plot_style_radar()` et `plot_feature_importance_bar()`. Comme ce dépôt accueille les deux projets dans le même arbre, les fonctions de tracé sont scindées par projet (`viz/style_duel.py`, `viz/topic_heatmap.py`) plutôt que d'accumuler les deux dans un seul fichier grandissant. `style.py` (couleurs, polices) reste unique et partagé — c'est le point que `STYLE_DUEL.md` §7 et `THEMATIC_HEATMAP.md` §0 demandent explicitement ("palette catégorielle PM partagée entre les deux projets"). Une fois le projet 02 écrit, `plot_banner()` et les utilitaires d'axes sombres se sont révélés identiques d'un projet à l'autre - déplacés dans `viz/common.py` plutôt que dupliqués une deuxième fois.
+`STYLE_DUEL.md` section 11 suggests a single `portfolio_viz.py` for `plot_style_radar()` and `plot_feature_importance_bar()`. Since this repo hosts both projects in the same tree, plotting functions are split by project (`viz/style_duel.py`, `viz/topic_heatmap.py`) rather than accumulating both in one growing file. `style.py` (colors, fonts) stays single and shared: this is the point `STYLE_DUEL.md` section 7 and `THEMATIC_HEATMAP.md` section 0 both explicitly require ("PM categorical palette shared between the two projects"). Once project 02 was written, `plot_banner()` and the dark-axes utilities turned out to be identical across projects, moved into `viz/common.py` rather than duplicated a second time.
 
-## 7. Périmètre des Premiers ministres
+## 7. Prime Minister scope
 
-- `data_access.IN_SCOPE_PMS` (radar, 4 PM) exclut explicitement Andy Burnham (PM depuis le 2026-07-20, voir `PHASE0_SCOPING.md` du dépôt `hansard-pm-extraction`) — absent du corpus à la date d'extraction actuelle, et hors périmètre pour ce projet pour l'instant, par décision explicite plutôt que par un filtrage accidentel.
-- `data_access.CLASSIFIER_PMS` (matrice de confusion, importance de permutation, 3 PM) exclut Liz Truss, comme Phase 6 elle-même (`split.py`) — pas une décision de ce dépôt, une reprise à l'identique de celle de `hansard-pm-nlp`.
+- `data_access.IN_SCOPE_PMS` (radar, 4 PMs) explicitly excludes Andy Burnham (PM since 2026-07-20, see `PHASE0_SCOPING.md` in the `hansard-pm-extraction` repo): absent from the corpus at the current extraction date, and out of scope for this project for now, by explicit decision rather than accidental filtering.
+- `data_access.CLASSIFIER_PMS` (confusion matrix, permutation importance, 3 PMs) excludes Liz Truss, as Phase 6 itself does (`split.py`): not a decision made by this repo, a like-for-like carryover from `hansard-pm-nlp`.
 
-## 8. Polices : instances statiques, pas les fichiers variables de Google Fonts
+## 8. Fonts: static instances, not Google Fonts' variable files
 
-Lora et Inter ne sont distribuées par Google Fonts qu'en polices variables (`Lora[wght].ttf`, `Inter[opsz,wght].ttf`) — un seul fichier couvrant toute la plage de graisse. Matplotlib ne résout pas de façon fiable une graisse précise (700, 600...) à l'intérieur d'un fichier variable. `assets/fonts/` contient donc des instances statiques, générées une fois avec `fontTools.varLib.instancer` (`wght=700` pour Lora, `600` et `400` pour Inter) et leur table de noms nettoyée (name ID 16/17 supprimés) pour que chaque poids résolve un nom de famille distinct et sans ambiguïté (`Lora`, `Inter SemiBold`, `Inter`). IBM Plex Mono est distribuée nativement en fichiers statiques par graisse, aucune instanciation nécessaire.
+Lora and Inter are only distributed by Google Fonts as variable fonts (`Lora[wght].ttf`, `Inter[opsz,wght].ttf`), a single file covering the whole weight range. Matplotlib does not reliably resolve a precise weight (700, 600...) from within a variable file. `assets/fonts/` therefore contains static instances, generated once with `fontTools.varLib.instancer` (`wght=700` for Lora, `600` and `400` for Inter) with their name table cleaned up (name IDs 16/17 removed) so each weight resolves a distinct, unambiguous family name (`Lora`, `Inter SemiBold`, `Inter`). IBM Plex Mono is natively distributed as static per-weight files, no instancing needed.
 
-## 9. Une inexactitude relevée dans `STYLE_DUEL.md`
+## 9. An inaccuracy found in `STYLE_DUEL.md`
 
-§12 affirme que `#9CA3AF` sur `#262730` est un contraste insuffisant et doit être réservé au fond `#0E1117`. Mesuré (`tests/test_style.py`), ce contraste est en réalité de 5,84:1 — au-dessus du seuil WCAG AA (4,5:1) que la spec applique partout ailleurs. Sans conséquence visuelle ici (aucun texte secondaire n'est posé sur `#262730` dans ce projet), mais noté plutôt que silencieusement propagé.
+Section 12 claims that `#9CA3AF` on `#262730` is insufficient contrast and should be reserved for the `#0E1117` background. Measured (`tests/test_style.py`), that contrast is actually 5.84:1, above the WCAG AA threshold (4.5:1) the spec applies everywhere else. No visual consequence here (no secondary text sits on `#262730` in this project), but noted rather than silently carried forward.
 
-## 10. Projet 02 : les 13 libellés de thèmes sont un travail éditorial nouveau
+## 10. Project 02: the 13 topic labels are new editorial work
 
-`THEMATIC_HEATMAP.md` §6 demande des "labels courts et en langage courant... repris tels quels de l'interprétation déjà rédigée dans `phase5_lda_report.md` — ne pas réinventer les intitulés." Vérifié directement dans ce rapport et dans `app.py` (onglet Topics du dashboard live) : aucun des deux ne contient de label en langage courant, seulement des listes de mots-clés bruts (`phase5_lda_report.md`) ou des labels algorithmiques du type `"T2: hs, project, rail"` (`app.py`, 3 premiers mots-clés concaténés). `data_access.TOPIC_LABELS` (13 entrées, une par thème post-fusion) a donc été rédigé pour ce projet à partir de ces mêmes listes de mots-clés - un choix éditorial documenté comme tel dans le code et le README du projet, pas présenté comme une reprise neutre d'un texte existant.
+`THEMATIC_HEATMAP.md` section 6 asks for "short, plain language labels... carried over unchanged from the interpretation already written in `phase5_lda_report.md`, do not reinvent the labels." Verified directly in that report and in `app.py` (the live dashboard's Topics tab): neither contains a plain language label, only raw keyword lists (`phase5_lda_report.md`) or algorithmic labels like `"T2: hs, project, rail"` (`app.py`, the first 3 keywords concatenated). `data_access.TOPIC_LABELS` (13 entries, one per post-merge topic) was therefore written for this project from those same keyword lists, an editorial choice documented as such in the code and the project's README, not presented as a neutral reuse of existing text.
 
-## 11. Projet 02 : la justification du zoom Covid existe réellement - dans `app.py`, pas dans un rapport
+## 11. Project 02: the Covid zoom's rationale genuinely exists, in `app.py`, not in a report
 
-À l'inverse du point précédent, la légende de l'onglet Topics du dashboard live (`app.py`) affirme déjà explicitement que les 3 thèmes Covid "track distinct sub-phases (restrictions/testing, vaccines/schools, NHS pay/inquiry) rather than one duplicated topic" - exactement le constat que `THEMATIC_HEATMAP.md` §6 demande d'illustrer pour justifier de ne pas les fusionner. Cette phrase est reprise (traduite, pas réinventée) dans `data_access.COVID_TOPIC_LABELS` et le README du projet, avec attribution à `app.py` plutôt que présentée comme une observation nouvelle de ce projet.
+Unlike the previous point, the live dashboard's Topics tab caption (`app.py`) already explicitly states that the 3 Covid topics "track distinct sub-phases (restrictions/testing, vaccines/schools, NHS pay/inquiry) rather than one duplicated topic", exactly the point `THEMATIC_HEATMAP.md` section 6 asks to illustrate to justify not merging them. That sentence is carried over (translated, not invented) into `data_access.COVID_TOPIC_LABELS` and the project's README, with attribution to `app.py` rather than presented as a new observation from this project.
 
-## 12. Projet 02 : dates de mandat lues depuis `hansard-pm-nlp`, pas depuis un troisième dépôt cloné
+## 12. Project 02: tenure dates read from `hansard-pm-nlp`, not from a third cloned repo
 
-`THEMATIC_HEATMAP.md` §0 demande de charger les dates de transition de PM depuis `PHASE0_SCOPING.md` (dépôt `hansard-pm-extraction`). Plutôt que de cloner un troisième dépôt pour 4 dates, `data_access.load_pm_tenures()` les lit depuis `data/input/pm_tenures.parquet`, déjà présent dans le checkout `hansard-pm-nlp` que ce dépôt lit pour tout le reste - vérifié à la main que les deux sources concordent exactement (mêmes 4 PM, mêmes dates de début/fin).
+`THEMATIC_HEATMAP.md` section 0 asks for PM transition dates to be loaded from `PHASE0_SCOPING.md` (the `hansard-pm-extraction` repo). Rather than cloning a third repo for 4 dates, `data_access.load_pm_tenures()` reads them from `data/input/pm_tenures.parquet`, already present in the `hansard-pm-nlp` checkout this repo reads everything else from, verified by hand that the two sources match exactly (same 4 PMs, same start and end dates).
 
-## 13. Projet 02 : Cividis en 0→max, pas en percentile
+## 13. Project 02: Cividis scaled 0 to max, not to a percentile
 
-Le poids d'un thème LDA n'a pas de borne supérieure naturelle interprétable - `plot_topic_heatmap()` fixe `vmax` au maximum observé dans la matrice mensuelle plutôt qu'à 1.0 (l'échelle brute du modèle, où aucune cellule n'approche jamais 1 puisque la moyenne mensuelle lisse les pics) ou à un percentile arbitraire, pour que "élevé" sur la colorbar corresponde toujours au pic réellement le plus visible sur la carte, quelle que soit la fenêtre de PM affichée.
+An LDA topic weight has no naturally interpretable upper bound. `plot_topic_heatmap()` sets `vmax` to the maximum observed in the monthly matrix rather than to 1.0 (the model's raw scale, where no cell ever approaches 1 since the monthly mean smooths out peaks) or to an arbitrary percentile, so that "high" on the colorbar always corresponds to the actually most visible peak on the map, whichever PM window is shown.

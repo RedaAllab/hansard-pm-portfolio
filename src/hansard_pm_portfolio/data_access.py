@@ -157,12 +157,12 @@ def load_style_profile() -> pd.DataFrame:
 
 
 RADAR_AXES = [
-    ("mtld", "Diversité lexicale (MTLD)"),
-    ("mean_flesch_kincaid_grade", "Lisibilité (Flesch-Kincaid)"),
-    ("mean_hedge_rate", "Nuance (« hedging »)"),
-    ("mean_net_certainty", "Certitude nette"),
-    ("fw_not_rate", "Fréquence de « not »"),
-    ("mean_words_per_sentence", "Mots par phrase"),
+    ("mtld", "Lexical diversity (MTLD)"),
+    ("mean_flesch_kincaid_grade", "Readability (Flesch-Kincaid)"),
+    ("mean_hedge_rate", "Hedging rate"),
+    ("mean_net_certainty", "Net certainty"),
+    ("fw_not_rate", "Frequency of 'not'"),
+    ("mean_words_per_sentence", "Words per sentence"),
 ]
 
 
@@ -225,14 +225,14 @@ CRISIS_WINDOWS = {
     "ukraine_invasion": ("2022-02-24", "2022-05-24"),
     "labour_leadership_crisis": ("2026-05-07", "2026-07-20"),
 }
-# French display labels for the bands above - not part of the ported
-# constant, so the two can't silently drift if CRISIS_WINDOWS is ever
-# re-synced from upstream.
+# Display labels for the bands above - not part of the ported constant, so
+# the two can't silently drift if CRISIS_WINDOWS is ever re-synced from
+# upstream.
 CRISIS_LABELS = {
     "covid19": "Covid-19",
     "mini_budget": "Mini-budget",
-    "ukraine_invasion": "Invasion de l'Ukraine",
-    "labour_leadership_crisis": "Leadership travailliste",
+    "ukraine_invasion": "Invasion of Ukraine",
+    "labour_leadership_crisis": "Labour leadership crisis",
 }
 
 # Hand-written from phase5_lda_report.md's keyword lists (K=14). Neither
@@ -243,20 +243,20 @@ CRISIS_LABELS = {
 # something that already existed elsewhere. Topic numbers (see
 # phase5_lda_report.md) are noted in comments for traceability back to the
 # keyword lists these were written from.
-MERGED_TOPIC_LABEL = "Ukraine, Russie et sécurité internationale"  # topic_0 + topic_1
+MERGED_TOPIC_LABEL = "Ukraine, Russia and international security"  # topic_0 + topic_1
 TOPIC_LABELS = {
-    "topic_6": "Brexit et l'accord nord-irlandais",
-    "topic_3": "Relations commerciales post-Brexit",
-    "topic_5": "Covid-19 : restrictions et tests",
-    "topic_7": "Covid-19 : vaccins et écoles",
-    "topic_9": "Covid-19 : NHS et enquête publique",
-    "topic_11": "Afghanistan et le retrait de Kaboul",
-    "topic_8": "Climat et sommet de la COP26",
-    "topic_10": "Israël, Gaza et le Moyen-Orient",
-    "topic_2": "Transports et grands projets d'infrastructure",
-    "topic_12": "Budget et politique intérieure",
-    "topic_4": "Enquêtes publiques : justice et vérité",
-    "topic_13": "Nominations et vetting de sécurité",
+    "topic_6": "Brexit and the Northern Ireland deal",
+    "topic_3": "Post-Brexit trade relations",
+    "topic_5": "Covid-19: restrictions and testing",
+    "topic_7": "Covid-19: vaccines and schools",
+    "topic_9": "Covid-19: NHS and public inquiry",
+    "topic_11": "Afghanistan and the withdrawal from Kabul",
+    "topic_8": "Climate and the COP26 summit",
+    "topic_10": "Israel, Gaza and the Middle East",
+    "topic_2": "Transport and major infrastructure projects",
+    "topic_12": "Budget and domestic policy",
+    "topic_4": "Public inquiries: justice and truth",
+    "topic_13": "Appointments and security vetting",
 }
 # Row order for the heatmap - grouped thematically (international security,
 # the 3 Covid sub-topics kept together, then domestic) rather than raw
@@ -264,18 +264,18 @@ TOPIC_LABELS = {
 # to avoid "an arbitrary alphabetical scatter" of related topics.
 TOPIC_DISPLAY_ORDER = [
     MERGED_TOPIC_LABEL,
-    "Brexit et l'accord nord-irlandais",
-    "Relations commerciales post-Brexit",
-    "Covid-19 : restrictions et tests",
-    "Covid-19 : vaccins et écoles",
-    "Covid-19 : NHS et enquête publique",
-    "Afghanistan et le retrait de Kaboul",
-    "Climat et sommet de la COP26",
-    "Israël, Gaza et le Moyen-Orient",
-    "Transports et grands projets d'infrastructure",
-    "Budget et politique intérieure",
-    "Enquêtes publiques : justice et vérité",
-    "Nominations et vetting de sécurité",
+    "Brexit and the Northern Ireland deal",
+    "Post-Brexit trade relations",
+    "Covid-19: restrictions and testing",
+    "Covid-19: vaccines and schools",
+    "Covid-19: NHS and public inquiry",
+    "Afghanistan and the withdrawal from Kabul",
+    "Climate and the COP26 summit",
+    "Israel, Gaza and the Middle East",
+    "Transport and major infrastructure projects",
+    "Budget and domestic policy",
+    "Public inquiries: justice and truth",
+    "Appointments and security vetting",
 ]
 
 # THEMATIC_HEATMAP.md's own "3 Covid topics, deliberately not merged" visual
@@ -285,9 +285,9 @@ TOPIC_DISPLAY_ORDER = [
 # (restrictions/testing, vaccines/schools, NHS pay/inquiry) rather than one
 # duplicated topic"), sourced from inspecting the K=14 word lists directly.
 COVID_TOPIC_LABELS = [
-    "Covid-19 : restrictions et tests",
-    "Covid-19 : vaccins et écoles",
-    "Covid-19 : NHS et enquête publique",
+    "Covid-19: restrictions and testing",
+    "Covid-19: vaccines and schools",
+    "Covid-19: NHS and public inquiry",
 ]
 
 

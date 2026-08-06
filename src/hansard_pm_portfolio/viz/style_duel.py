@@ -73,11 +73,11 @@ def plot_style_radar(
         ax.fill(angles, values, color=color, alpha=0.15)
 
     fig.text(
-        0.5, 0.94, "LE DUEL DE STYLE", ha="center", fontsize=style.TITLE_SIZE,
+        0.5, 0.94, "THE STYLE DUEL", ha="center", fontsize=style.TITLE_SIZE,
         fontweight="bold", color=style.TEXT_PRIMARY, fontfamily=style.TITLE_FONT,
     )
     fig.text(
-        0.5, 0.90, "Ce que 6 traits stylométriques révèlent", ha="center",
+        0.5, 0.90, "What 6 stylometric traits reveal", ha="center",
         fontsize=style.SUBTITLE_SIZE, color=style.TEXT_SECONDARY, fontfamily=style.SUBTITLE_FONT,
     )
 
@@ -94,7 +94,7 @@ def plot_style_radar(
         color=style.TEXT_SECONDARY, fontfamily=style.BODY_FONT,
     )
     fig.text(
-        0.5, 0.02, "Source : Hansard API · hansard-pm-nlp", ha="center",
+        0.5, 0.02, "Source: Hansard API · hansard-pm-nlp", ha="center",
         fontsize=style.SOURCE_SIZE, color=style.SECONDARY, fontfamily=style.BODY_FONT,
     )
     return fig
@@ -141,11 +141,11 @@ def plot_feature_importance_bar(
 
 
 def _plain_language_score(accuracy: float) -> str:
-    """"9 cas sur 10" style phrasing (STYLE_DUEL.md section 6, visuel 2) -
+    """"9 out of 10" style phrasing (STYLE_DUEL.md section 6, visuel 2) -
     accuracy is a 0-1 fraction, rounded to the nearest /10 the way the spec's
     own example phrases it.
     """
-    return f"{round(accuracy * 10)} cas sur 10"
+    return f"{round(accuracy * 10)} out of 10"
 
 
 def plot_confusion_matrix(matrix: pd.DataFrame, accuracy: float) -> Figure:
@@ -174,9 +174,9 @@ def plot_confusion_matrix(matrix: pd.DataFrame, accuracy: float) -> Figure:
                         fontfamily=style.BODY_FONT, ha="center")
     ax.set_yticklabels(matrix.index, fontsize=style.AXIS_LABEL_SIZE, color=style.TEXT_PRIMARY,
                         fontfamily=style.BODY_FONT)
-    ax.set_xlabel("Prédit", fontsize=style.AXIS_LABEL_SIZE, color=style.TEXT_SECONDARY,
+    ax.set_xlabel("Predicted", fontsize=style.AXIS_LABEL_SIZE, color=style.TEXT_SECONDARY,
                   fontfamily=style.BODY_FONT, labelpad=10)
-    ax.set_ylabel("Réel", fontsize=style.AXIS_LABEL_SIZE, color=style.TEXT_SECONDARY,
+    ax.set_ylabel("Actual", fontsize=style.AXIS_LABEL_SIZE, color=style.TEXT_SECONDARY,
                   fontfamily=style.BODY_FONT)
     for spine in ax.spines.values():
         spine.set_visible(False)
@@ -198,11 +198,11 @@ def plot_confusion_matrix(matrix: pd.DataFrame, accuracy: float) -> Figure:
                 )
 
     fig.suptitle(
-        "Le classifieur retrouve-t-il le bon Premier ministre ?", x=0.5,
+        "Does the classifier find the right Prime Minister?", x=0.5,
         fontsize=14, color=style.TEXT_PRIMARY, fontfamily=style.TITLE_FONT, fontweight="bold",
     )
     caption = (
-        f"Le modèle retrouve le bon Premier ministre dans {_plain_language_score(accuracy)}."
+        f"The model identifies the correct Prime Minister {_plain_language_score(accuracy)}."
     )
     fig.text(
         0.5, 0.025, caption, ha="center", fontsize=style.SUBTITLE_SIZE,

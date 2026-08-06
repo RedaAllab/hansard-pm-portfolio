@@ -37,7 +37,7 @@ PM_LINESTYLES = {
     "Rishi Sunak": "-",
     "Keir Starmer": "-",
 }
-TRUSS_CAVEAT = "* 49 jours de mandat — à lire avec prudence"
+TRUSS_CAVEAT = "* 49 day tenure, read with caution"
 
 # Sequential scale for the confusion-matrix heatmap (section 6, visuel 2):
 # Cividis, colorblind-safe by design.
