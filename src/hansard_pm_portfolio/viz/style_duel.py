@@ -11,7 +11,14 @@ from matplotlib.figure import Figure
 
 from hansard_pm_portfolio import style
 from hansard_pm_portfolio.data_access import IN_SCOPE_PMS, RADAR_AXES, normalize_radar
-from hansard_pm_portfolio.viz.common import FIGURE_KW, dark_axes, hide_spines, plot_banner, save
+from hansard_pm_portfolio.viz.common import (
+    FIGURE_KW,
+    dark_axes,
+    hide_spines,
+    plot_banner,
+    plot_footer,
+    save,
+)
 
 __all__ = [
     "plot_banner",
@@ -70,7 +77,11 @@ def plot_style_radar(
         # overflow the figure width at ncol=4.
         label = f"{pm} (n={n_by_pm[pm]})*" if pm == "Liz Truss" else pm
         ax.plot(angles, values, color=color, linestyle=linestyle, linewidth=2, label=label)
-        ax.fill(angles, values, color=color, alpha=0.15)
+        # B1.2: 0.15 alpha with 4 overlapping filled series made the
+        # center of the radar (where all 4 traits' low values cluster)
+        # illegible; 0.09 keeps the fill as a soft area cue without the
+        # center turning solid.
+        ax.fill(angles, values, color=color, alpha=0.09)
 
     fig.text(
         style.TITLE_X, 0.94, "THE STYLE DUEL", ha=style.TITLE_HA, fontsize=style.TITLE_SIZE,
@@ -89,14 +100,16 @@ def plot_style_radar(
         text.set_color(style.TEXT_PRIMARY)
         text.set_fontfamily(style.BODY_FONT)
 
-    fig.text(
-        0.5, 0.065, style.TRUSS_CAVEAT, ha="center", fontsize=style.SOURCE_SIZE,
-        color=style.TEXT_SECONDARY, fontfamily=style.BODY_FONT,
-    )
-    fig.text(
-        0.5, 0.02, "Source: Hansard API · hansard-pm-nlp", ha="center",
-        fontsize=style.SOURCE_SIZE, color=style.SECONDARY, fontfamily=style.BODY_FONT,
-    )
+    # B1.1 (critical): the legend's `bbox_to_anchor` is in axes-fraction
+    # coordinates, TRUSS_CAVEAT used to sit at a hardcoded figure-fraction
+    # y - two coordinate systems positioned independently, with nothing
+    # checking the legend's real rendered bbox before placing the caveat
+    # right where it landed. C.2's simpler, preferred fix: merge the
+    # caveat into the footer as one note-above-source line via
+    # plot_footer() (D.1) - anchored to the legend's own real bbox
+    # (anchor=legend), not a fixed y, so the footer block's position
+    # tracks the legend's actual rendered height instead of assuming it.
+    plot_footer(fig, x=0.5, ha="center", note=style.TRUSS_CAVEAT, anchor=legend)
     return fig
 
 

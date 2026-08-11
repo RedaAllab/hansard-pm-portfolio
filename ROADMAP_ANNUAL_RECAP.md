@@ -75,7 +75,7 @@ English translation of the original French roadmap, kept alongside `STYLE_DUEL.m
 
 - [x] Export `annual_recap_main.png`, wide format (recommended 2400x1000px, 200dpi, consistent with project 02's "frieze" format)
 - [x] Cut a per-year/segment version for an eventual 6-slide LinkedIn carousel (see section 9)
-- [x] Verify each year-card's readability once shrunk to mobile width
+- [x] Verify each year-card's readability once shrunk to mobile width - originally a one-off eyeball check (UX/dataviz audit D.6 flagged this as not reproducible); now backed by `tests/test_dataviz_layout.py::TestMobileReadability`, which computes effective glyph height at a simulated 400px width for every font size used and fails if any drops below ~2.5px, so this stays verified on every test run rather than only once
 
 ### Phase 6: Narrative notebook
 

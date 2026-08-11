@@ -29,7 +29,7 @@ This is the portfolio's executive summary: one card per calendar year, each show
 
 ## How this visual was built
 
-- **Built on 2 files, not the roadmap's suggested 4**: `event_study_dataset.parquet` and `lda_topics.parquet` verified to join cleanly (296/296 rows). Detail: [`ANNUAL_RECAP.md`](../../ANNUAL_RECAP.md) §1, [`ARCHITECTURE.md`](../../ARCHITECTURE.md) §19.
+- **Built on 2 files**: `event_study_dataset.parquet` and `lda_topics.parquet`, verified to join cleanly (296/296 rows). Detail: [`ANNUAL_RECAP.md`](../../ANNUAL_RECAP.md) §1, [`ARCHITECTURE.md`](../../ARCHITECTURE.md) §19.
 - **4 fixed indicators, locked before coding**: PM(s) in office, word volume, dominant theme, tone. Detail: [`ANNUAL_RECAP.md`](../../ANNUAL_RECAP.md) §2.
 - **Tone is net certainty again, not a new metric**: this portfolio's recurring throughline (projects 01 and 03 too). Detail: `ANNUAL_RECAP.md` §3.
 - **A design document before the rendering code**: this project composes a header frieze plus 8 year-cards rather than one chart type, so the layout was fixed in writing first. See [`ANNUAL_RECAP.md`](../../ANNUAL_RECAP.md).

@@ -113,7 +113,7 @@ Before proposing anything new, here is what the repo's documentation lets us ver
 ---
 ## 6. Visualization design
 ### Main visual: radar chart
-- **Type**: radar/spider chart, 6 axes, 4 overlaid series (one per PM), semi-transparent fill (alpha 0.15) under each line.
+- **Type**: radar/spider chart, 6 axes, 4 overlaid series (one per PM), semi-transparent fill (alpha 0.09) under each line. (Revised from the original 0.15 per the UX/dataviz audit, section B1.2: with 4 overlapping filled series, 0.15 made the chart's center - where every axis's low values cluster - unreadable.)
 - **Dimensions**: Matplotlib figure 8x8 inches, exported at 200 dpi, giving 1600x1600px.
 - **Colors**: PM categorical palette defined in section 3; background `#0E1117`; radial grid `#3A3D46`.
 - **Font sizes**: title 20pt, the 6 axis labels 11pt (`#FAFAFA`), radial tick labels 8pt (`#9CA3AF`, shown discreetly, 3 gridlines maximum).
@@ -138,6 +138,7 @@ Before proposing anything new, here is what the repo's documentation lets us ver
 - **Annotation**: a single plain language sentence below the chart ("The model identifies the correct Prime Minister 9 times out of 10"), no "accuracy/precision/recall" jargon inside the image itself (reserved for the README).
 ---
 ## 7. Usability
+- **No raw numeric scale, anywhere in the portfolio** (UX/dataviz audit, decision J.1 - written here as the explicit, citable rule D.3 asks any exception to reference): an axis that shows a scale must show a qualitative reference instead of raw tick numbers - "low"/"high" text, as this project's own confusion matrix colorbar and `THEMATIC_HEATMAP.md`'s heatmap colorbar already do. This radar already followed the rule (see "Axis design" above); it was previously violated by `pm_handover.py`'s `plot_transition_panels()` (raw ticks like 0.008/0.016/0.024), fixed per audit decisions J.1/J.3 - see that project's own module docstring. Any future chart that needs a scale reads it against this rule first, not against a per-project judgment call.
 - **Readability**: minimum font size 9pt in any exported image (below that, unreadable once GitHub/LinkedIn resizes the image).
 - **Contrast**: any text on a `#0E1117` background must reach at least a 4.5:1 ratio (WCAG AA); the `#FAFAFA` and `#9CA3AF` colors defined in section 3 meet this constraint, do not darken them further.
 - **Accessibility**: Okabe-Ito palette + verification with a color blindness simulator before publishing (see section 3); never encode information through color alone, line style (solid/dashed for Truss) always doubles the color information.

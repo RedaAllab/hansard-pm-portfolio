@@ -10,6 +10,7 @@ from here instead, so the two portfolio projects can't silently drift apart.
 from pathlib import Path
 
 import matplotlib.font_manager as fm
+import pandas as pd
 
 # --- Palette (STYLE_DUEL.md section 3) -------------------------------------
 
@@ -39,6 +40,53 @@ PM_LINESTYLES = {
 }
 TRUSS_CAVEAT = "* 49 day tenure, read with caution"
 
+# --- PM abbreviation convention (audit D.5/E, I.5/I.8) -----------------------
+# `"T" if span_months < 3 else name.split()[-1]` used to exist identically in
+# topic_heatmap.py, pm_handover.py and annual_recap.py (3 independently
+# maintained copies of the same rule - I.8 checks there is now exactly one).
+# Only Liz Truss's 49-day tenure is short enough to trigger it anywhere in
+# the current PM scope, but the mapping is keyed by name rather than
+# hardcoded to her specifically, so a future short tenure doesn't silently
+# fall through with no abbreviation.
+PM_SHORT_LABEL = {"Liz Truss": "T"}
+_ABBREVIATE_BELOW_MONTHS = 3.0
+
+
+def pm_abbreviation(pm_name: str, segment_start, segment_end) -> str:
+    """Surname, or a short abbreviation (see PM_SHORT_LABEL) if the segment
+    this label is drawn inside (`segment_start` to `segment_end` - a PM
+    frieze band, a year-card's PM band) is under `_ABBREVIATE_BELOW_MONTHS`
+    wide, too narrow for the full surname to read cleanly.
+
+    Takes the segment boundaries (not a pre-computed `span_months` float)
+    so the "how many months is this segment" computation lives in exactly
+    one place (I.8) - it used to be copy-pasted independently into
+    topic_heatmap.py, pm_handover.py and annual_recap.py (3 near-identical
+    `span_months = (end - start).days / 30` lines feeding 3 near-identical
+    `"T" if span_months < 3 else ...` decisions).
+
+    Centralizes the label decision so every image that abbreviates a PM
+    also has a caption for it, via `pm_abbreviation_note()` - never
+    abbreviate without one (D.5/I.5).
+    """
+    span_months = (pd.Timestamp(segment_end) - pd.Timestamp(segment_start)).days / 30
+    if span_months < _ABBREVIATE_BELOW_MONTHS:
+        return PM_SHORT_LABEL.get(pm_name, pm_name.split()[-1][:1])
+    return pm_name.split()[-1]
+
+
+def pm_abbreviation_note(pm_name: str, tenure_days: int | None = None) -> str:
+    """On-image legend text for an abbreviated PM label (D.5) - e.g.
+    "T = Liz Truss (49 days)". Always pair a `pm_abbreviation()` call that
+    can actually produce a non-surname short label with this note rendered
+    somewhere on the same figure (a footer/caption), not only in the
+    README prose beside it.
+    """
+    short = PM_SHORT_LABEL.get(pm_name, pm_name.split()[-1][:1])
+    if tenure_days is not None:
+        return f"{short} = {pm_name} ({tenure_days} days)"
+    return f"{short} = {pm_name}"
+
 # Sequential scale for the confusion-matrix heatmap (section 6, visuel 2):
 # Cividis, colorblind-safe by design.
 SEQUENTIAL_CMAP = "cividis"
@@ -65,10 +113,16 @@ _FONT_FILES = (
 )
 
 # Sizes in points, by usage (STYLE_DUEL.md section 5-6).
+# UX/dataviz audit D.3/I.3: every *_SIZE constant here must be >=9pt, no
+# silent exceptions - an exception would need to be whitelisted here with a
+# comment referencing STYLE_DUEL.md section 7's stated 9pt floor. None is
+# currently whitelisted: TICK_SIZE (8->9) and CARD_BODY_SIZE/
+# CARD_CAPTION_SIZE (7.5/6.5->9, audit B4/J.2) were the 3 violations found
+# and are fixed below rather than exempted.
 TITLE_SIZE = 20
 SUBTITLE_SIZE = 12
 AXIS_LABEL_SIZE = 11
-TICK_SIZE = 8
+TICK_SIZE = 9
 LEGEND_SIZE = 11
 SOURCE_SIZE = 9
 NUMBER_SIZE = 10
@@ -85,8 +139,14 @@ SECONDARY_TITLE_SIZE = 14
 PANEL_TITLE_SIZE = 11
 AXIS_SIDE_LABEL_SIZE = 9
 CARD_YEAR_SIZE = 13
-CARD_BODY_SIZE = 7.5
-CARD_CAPTION_SIZE = 6.5
+# Audit J.2: raised from 7.5/6.5 to the 9pt floor. On their own this makes
+# each card's wrapped theme text taller (fewer characters fit per line at
+# the same card width), which is why J.2 pairs this with (a) a taller
+# annual_recap_main.png canvas (viz/annual_recap.py's figsize) and (b)
+# viz/common.py's fit_text_to_width() computing an explicit ellipsis
+# fallback instead of assuming this size still fits any theme in 3 lines.
+CARD_BODY_SIZE = 9
+CARD_CAPTION_SIZE = 9
 CARD_NUMBER_SIZE = 12
 
 # --- Layout ------------------------------------------------------------------

@@ -42,7 +42,6 @@ A UK Prime Minister's parliamentary attention faithfully tracks the shocks of th
 - **Covid-19 occupies close to 16 continuous months**, but under 3 distinct angles (restrictions/testing, vaccines/schools, NHS staff/inquiry) that rise and fall at different times, see the zoom below.
 - **Afghanistan is the sharpest spike on the map**: nearly invisible before and after, dominant for 2-3 months right at the withdrawal from Kabul (summer 2021).
 - **"Budget and domestic policy" becomes the most consistently present topic from late 2022 onward**: under Sunak and then Starmer, attention shifts noticeably from external shock to domestic management.
-- **The "Labour leadership crisis" (May-July 2026) is the least recognizable of the 4 crisis windows**: unlike Brexit, Covid or Ukraine, it is a recent event specific to this corpus (the Starmer to Burnham transition), not a global shock the reader already knows.
 
 ## Secondary visuals
 
@@ -57,6 +56,7 @@ The first breaks the 13 topics into small individual panels rather than a single
 
 ## Limitations
 
+- **The "Labour leadership crisis" (May-July 2026) is the least recognizable of the 4 crisis windows**: unlike Brexit, Covid or Ukraine, it is a recent event specific to this corpus (the Starmer to Burnham transition), not a global shock the reader already knows - read that band with less prior context than the other 3.
 - **Liz Truss (5 documents, 49 days)**: the September to October 2022 columns rest on a very small sample, to be read as a noisy signal, not an established thematic policy.
 - **Topic labels are an interpretation, not a model truth**: LDA only produces word distributions; the plain language phrases used here are a human reading of those keywords, not an output of the model itself, another reader of the same keywords could have chosen different wording.
 - **The Ukraine/Russia duplicate (T0+T1) is a real signal in the corpus, not an artifact to fix**: documented in `phase5_lda_report.md` as reflecting distinct sub-periods of the conflict (the 2022 invasion, ongoing military aid, NATO summits) with different vocabulary each time, not model instability.

@@ -38,10 +38,10 @@ This project isolates the moment of a PM handover from everything else going on 
 
 ## What it reveals
 
-- **Johnson to Truss looks like the sharpest shift in the data**, both net certainty and sentiment drop within the first days of her tenure, but this reading needs the caveat below: there is no "before" data to compare it to in the strict 6-week window, so "shift" here really means "a fresh baseline appears", not "a measured change from a known starting point".
-- **Truss to Sunak is the one transition with a real before/after comparison on both sides**, and the picture is far less dramatic: values oscillate but do not show one clean before/after gap. The single "before" sitting that overlaps the mini-budget crisis window (ringed on the chart) makes even this comparison partly confounded with the crisis itself, not solely the change of PM.
-- **Sunak to Starmer shows a clear sentiment recovery after the transition**, following a general election, the most institutionally "clean" of the 3 handovers on paper, though it too has an empty "before" side (Parliament was dissolved for the campaign).
-- **None of this should be read as a confirmed "PM effect"**: Phase 7's own formal event-study regressions (`phase7_event_study_report.md`) tested crisis effects on the same underlying metrics and found no result survives Benjamini-Hochberg correction. This project shows a picture, consistent with that same caution, not a rebuttal of it.
+- **Johnson to Truss shows the sharpest shift in the data** — both net certainty and sentiment drop within her first days in office. *(see Limitations for why "shift" needs a caveat here)*
+- **Truss to Sunak is the one transition with a real before/after comparison on both sides** — and the picture is far less dramatic: values oscillate rather than showing one clean before/after gap. *(see Limitations for the mini-budget window this comparison overlaps)*
+- **Sunak to Starmer shows a clear sentiment recovery after the transition** — the most institutionally clean of the 3 handovers, following a general election.
+- These are 3 pictures, not a statistical test of a "PM effect" — see Limitations for why.
 
 ## Secondary visual
 

@@ -11,7 +11,7 @@ from matplotlib.figure import Figure
 
 from hansard_pm_portfolio import data_access as da
 from hansard_pm_portfolio import style
-from hansard_pm_portfolio.viz.common import FIGURE_KW, hide_spines
+from hansard_pm_portfolio.viz.common import FIGURE_KW, fit_text_to_width, hide_spines, plot_footer
 
 
 def _month_edges(monthly: pd.DataFrame) -> tuple[float, float]:
@@ -70,8 +70,9 @@ def _draw_pm_transitions(
     boundaries = [pd.Timestamp(s) for s in starts] + [chart_end]
     for i, name in enumerate(names):
         mid = boundaries[i] + (boundaries[i + 1] - boundaries[i]) / 2
-        span_months = (boundaries[i + 1] - boundaries[i]).days / 30
-        label = "T" if span_months < 3 else name.split()[-1]
+        # style.pm_abbreviation() centralizes this rule (D.5/E/I.8) - was
+        # previously its own copy identical to annual_recap.py's.
+        label = style.pm_abbreviation(name, boundaries[i], boundaries[i + 1])
         ax.text(
             mid, y_bottom, label, ha="center", va="top", fontsize=style.TOPIC_LABEL_SIZE,
             color=style.TEXT_SECONDARY, fontfamily=style.BODY_FONT, clip_on=False,
@@ -81,11 +82,19 @@ def _draw_pm_transitions(
 def plot_topic_heatmap(monthly: pd.DataFrame, tenures: pd.DataFrame) -> Figure:
     """THEMATIC_HEATMAP.md section 6, visuel principal: 13 topics x month,
     Cividis, crisis windows + PM transitions overlaid.
+
+    Audit B2.1: `subplots_adjust(bottom=0.26)` plus the horizontal
+    colorbar's own `pad=0.22` left roughly 35-40% of the figure as dead
+    vertical space below the heatmap. Figure height cut from 6 to 5.3in
+    and the colorbar's pad reduced from 0.22 to 0.14 - `bottom` stays the
+    same fraction, so the heatmap itself and the PM-transition labels
+    beneath it keep the same relative layout, just without the empty
+    margin under the colorbar.
     """
     style.register_fonts()
     n_topics = monthly.shape[1]
 
-    fig, ax = plt.subplots(figsize=(12, 6), **FIGURE_KW)
+    fig, ax = plt.subplots(figsize=(12, 5.3), **FIGURE_KW)
     ax.set_facecolor(style.BACKGROUND)
 
     x_start, x_end = _month_edges(monthly)
@@ -127,15 +136,24 @@ def plot_topic_heatmap(monthly: pd.DataFrame, tenures: pd.DataFrame) -> Figure:
 
     fig.subplots_adjust(top=0.84, bottom=0.26, left=0.30, right=0.95)
 
-    cbar = fig.colorbar(im, ax=ax, orientation="horizontal", fraction=0.04, pad=0.22,
+    cbar = fig.colorbar(im, ax=ax, orientation="horizontal", fraction=0.04, pad=0.20,
                          aspect=40)
     cbar.set_ticks([0, monthly.values.max()])
     cbar.set_ticklabels(["low", "high"])
     cbar.ax.tick_params(colors=style.TEXT_SECONDARY, labelsize=style.CRISIS_LABEL_SIZE)
     cbar.outline.set_visible(False)
 
-    fig.text(0.95, 0.02, "Source: Hansard API · hansard-pm-nlp", ha="right",
-              fontsize=style.SOURCE_SIZE, color=style.SECONDARY, fontfamily=style.BODY_FONT)
+    # D.5/I.5: the PM-transition labels below the heatmap may abbreviate a
+    # PM to "T" (style.pm_abbreviation(), only Liz Truss's 49-day tenure
+    # currently triggers it) - legend it on-image whenever that happens,
+    # via plot_footer(), not only in the surrounding README prose.
+    truss = tenures[tenures["pm_name"] == "Liz Truss"]
+    note = None
+    if not truss.empty:
+        tenure_days = (pd.Timestamp(truss.iloc[0]["tenure_end"])
+                        - pd.Timestamp(truss.iloc[0]["tenure_start"])).days
+        note = style.pm_abbreviation_note("Liz Truss", tenure_days=tenure_days)
+    plot_footer(fig, x=0.95, y=0.02, ha="right", note=note)
     return fig
 
 
@@ -149,12 +167,16 @@ def plot_topic_small_multiples(monthly: pd.DataFrame, tenures: pd.DataFrame) -> 
     """
     style.register_fonts()
     topics = list(monthly.columns)
-    n_cols = 4
+    # B2.2: a 4x4 grid left 3 of 16 cells empty for 13 topics, a
+    # disproportionate share of blank space in one corner. 5x3=15 slots
+    # leaves only 2 empty - the smallest rectangular grid that still fits
+    # 13 panels at a reasonable per-panel aspect ratio.
+    n_cols = 5
     n_rows = -(-len(topics) // n_cols)
     x_start, x_end = _month_edges(monthly)
     y_max = monthly.values.max() * 1.15
 
-    fig, axes = plt.subplots(n_rows, n_cols, figsize=(10, 5), sharex=True, sharey=True,
+    fig, axes = plt.subplots(n_rows, n_cols, figsize=(12, 4.8), sharex=True, sharey=True,
                               **FIGURE_KW)
     axes_flat = axes.flatten()
 
@@ -168,8 +190,17 @@ def plot_topic_small_multiples(monthly: pd.DataFrame, tenures: pd.DataFrame) -> 
                       alpha=0.4, zorder=0, lw=0)
         for start in tenures["tenure_start"].iloc[1:]:
             ax.axvline(pd.Timestamp(start), color=style.GRID, linestyle=":", linewidth=0.6)
-        ax.set_title(topic, fontsize=7, color=style.TEXT_PRIMARY, fontfamily=style.BODY_FONT,
-                     pad=3)
+        # D.3: 9pt floor - was 7pt previously. At 9pt a narrower (5-column,
+        # B2.2) panel can't always hold a full topic name on one line
+        # (e.g. "Ukraine, Russia and international security" running into
+        # the next panel) - common.fit_text_to_width() wraps it to this
+        # panel's real width instead (same component annual_recap.py's
+        # theme text uses, exactly the reuse audit section E anticipated).
+        title_lines = fit_text_to_width(
+            ax, topic, max_width_frac=0.98, fontsize=style.SOURCE_SIZE, max_lines=2,
+        )
+        ax.set_title("\n".join(title_lines), fontsize=style.SOURCE_SIZE, color=style.TEXT_PRIMARY,
+                     fontfamily=style.BODY_FONT, pad=3, linespacing=1.15)
         ax.set_ylim(0, y_max)
         ax.set_xlim(x_start, x_end)
         hide_spines(ax)
@@ -177,22 +208,31 @@ def plot_topic_small_multiples(monthly: pd.DataFrame, tenures: pd.DataFrame) -> 
         ax.xaxis.set_major_locator(mdates.YearLocator(2))
         ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
         # sharex=True hides tick labels by grid row, not "last visible panel
-        # per column" - with only 1 of 4 slots filled in the last row, that
-        # left 12 of 13 panels with no time reference at all. Every panel
-        # gets its own labels instead.
-        ax.tick_params(axis="x", colors=style.TEXT_SECONDARY, labelsize=6, length=0,
-                       labelbottom=True)
+        # per column" - with only 2 of 5 slots empty in the last row, that
+        # would otherwise leave most panels with no time reference at all.
+        # Every panel gets its own labels instead. D.3: 9pt floor - was
+        # 6pt previously.
+        ax.tick_params(axis="x", colors=style.TEXT_SECONDARY, labelsize=style.SOURCE_SIZE,
+                       length=0, labelbottom=True)
 
     for ax in axes_flat[len(topics):]:
         ax.set_visible(False)
 
-    fig.suptitle("Each theme, month by month", x=style.TITLE_X, ha=style.TITLE_HA,
-                 fontsize=style.SECONDARY_TITLE_SIZE, color=style.TEXT_PRIMARY,
-                 fontfamily=style.TITLE_FONT, fontweight="bold")
+    # Same fig.text() convention as the other 3 projects' titles, not
+    # fig.suptitle() (whose automatic y previously overlapped the subtitle
+    # below it here too - the same class of bug found and fixed in
+    # pm_handover.py's plot_transition_panels() while regenerating these
+    # images, independent of the audit's own explicitly-named findings).
+    fig.text(0.06, 0.965, "Each theme, month by month", ha=style.TITLE_HA,
+              fontsize=style.SECONDARY_TITLE_SIZE, color=style.TEXT_PRIMARY,
+              fontfamily=style.TITLE_FONT, fontweight="bold")
     fig.text(0.06, 0.925, "The 13 themes separately, one panel per theme rather than a "
-             "13 color legend", fontsize=9, color=style.TEXT_SECONDARY,
+             "13 color legend", fontsize=style.SOURCE_SIZE, color=style.TEXT_SECONDARY,
              fontfamily=style.SUBTITLE_FONT)
-    fig.subplots_adjust(top=0.85, bottom=0.08, left=0.04, right=0.98, hspace=0.55, wspace=0.15)
+    # More top margin and hspace than before (0.85/0.55) - panel titles can
+    # now wrap to 2 lines (fit_text_to_width, above), so each row needs
+    # more headroom than a guaranteed-1-line 7pt title did.
+    fig.subplots_adjust(top=0.80, bottom=0.08, left=0.04, right=0.98, hspace=0.9, wspace=0.15)
     return fig
 
 
