@@ -136,6 +136,14 @@ def plot_feature_importance_bar(
         label.set_fontfamily(style.BODY_FONT)
     ax.grid(axis="x", color=style.GRID, linewidth=0.5)
     ax.set_axisbelow(True)
+    # J.1 (no raw numeric scale anywhere): matplotlib's default x-ticks
+    # (permutation-importance units, e.g. "0.02") are a bare scale with no
+    # intelligible unit for a non-technical reader. The per-bar labels below
+    # already give the reader a contextualized, feature-specific number
+    # (labeled against a named feature, not a bare axis) - this only hides
+    # the redundant unlabeled axis scale, the gridlines it drew stay as a
+    # visual reading aid.
+    ax.tick_params(axis="x", labelbottom=False, length=0)
 
     for bar, value in zip(bars, importance["importance"], strict=True):
         ax.text(
@@ -222,6 +230,14 @@ def plot_confusion_matrix(matrix: pd.DataFrame, accuracy: float) -> Figure:
     )
     fig.subplots_adjust(top=0.88, bottom=0.20, left=0.22, right=0.88)
     cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+    # J.1 (no raw numeric scale anywhere): matplotlib's default colorbar
+    # ticks (0/20/40/60/80/100, no "%" unit) are a bare scale - each cell
+    # already carries its own labeled, contextualized "NN%" text, so the
+    # colorbar itself only needs the same qualitative low/high pair
+    # topic_heatmap.py's colorbar already uses, not a second, redundant,
+    # unlabeled numeric scale.
+    cbar.set_ticks([0, 100])
+    cbar.set_ticklabels(["low", "high"])
     cbar.ax.tick_params(colors=style.TEXT_SECONDARY, labelsize=style.TICK_SIZE)
     cbar.outline.set_visible(False)
     return fig
