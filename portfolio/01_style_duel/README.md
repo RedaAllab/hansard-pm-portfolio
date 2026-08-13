@@ -31,8 +31,8 @@ Every UK Prime Minister has a recognizable speaking style, measured here across 
 ## How this visual was built
 
 - **No new model trained**: reads artifacts `hansard-pm-nlp` already computed (Phases 3, 4, 6), no `build_*.py` script re-run.
-- **6 traits, not 14**: kept readable per [`STYLE_DUEL.md`](../../STYLE_DUEL.md) §6. "Not" frequency is recomputed (Phase 6 only covers 3 of 4 PMs for it); the other 5 are unchanged whole-corpus exports.
-- **`pos_INTJ` replaced with `mean_words_per_sentence`**: `pos_INTJ` needs spaCy, only run for 3 PMs. Detail: [`ARCHITECTURE.md`](../../ARCHITECTURE.md) §5.
+- **6 traits, not 14**: kept to what a radar can show clearly, per [`STYLE_DUEL.md`](../../STYLE_DUEL.md) §6. *(full trait-by-trait provenance in [`ARCHITECTURE.md`](../../ARCHITECTURE.md) §5)*
+- **One trait swapped so all 4 PMs are measured the same way**: `pos_INTJ` relied on a tool only run for 3 of the 4 PMs, so `mean_words_per_sentence` stands in its place here — available for all 4, and itself one of the classifier's strongest traits. *(why, in [`ARCHITECTURE.md`](../../ARCHITECTURE.md) §5)*
 - **Model evidence**: classifier trained on a temporal split, full report in [`phase6_classifier_report.md`](https://github.com/RedaAllab/hansard-pm-nlp/blob/main/data/processed/phase6_classifier_report.md).
 
 ## What it reveals
